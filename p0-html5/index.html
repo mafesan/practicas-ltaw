@@ -5,23 +5,55 @@
     <title>CV - Miguel Angel FS</title>
     <link rel="shortcut icon" href="document.ico"/>
     <meta charset="UTF-8">
+    <meta name="description" content="Curriculum online">
+    <meta name="author" content="Miguel Angel Fernandez Sanchez">
+
+    <style>
+    body {
+        background-color: gray;
+        font-family: helvetica;
+        margin-left:20px;
+    }
+    #img01 {
+        width:65px;
+        height:100px;
+        padding-right: 15px;
+    }
+    #tabla02 {
+        width:70%;
+    }
+    </style>
 </head>
 
-<body style="background-color:gray;">
+<body>
+    <div>
     <h1 align="center">Currículum Vitae</h1>
+    </div>
 
-    <p>
-        <img src="perfil.png" alt="foto de perfil" style="width:65px; height:100px;" align="left">
-        <h2 align="center">Miguel Ángel Fernández Sánchez</h2>
+    <div>
+    <p id="encabezado">
+        <table id="tabla01">
+            <tr>
+                <td>
+                <img id="img01" src="perfil.png" alt="foto de perfil">
+                </td>
+                <td>
+                <h2>Miguel Ángel Fernández Sánchez</h2>
 
-        <h4 align="center">Estudiante de grado ISAM en Universidad Rey Juan Carlos.<br>
-        Técnico de apoyo en investigación en Libresoft (GSyC, URJC).<br>
-        </h4>
+                <h4>Estudiante de grado ISAM en Universidad Rey Juan Carlos.<br>
+                Técnico de apoyo en investigación en Libresoft (GSyC, URJC).<br>
+                </h4>
+                </td>
+            </tr>
+        </table>
     </p>
     <hr>
+    </div>
+
+    <div>
     <p>
         <h2>Datos de contacto</h2>
-        <table align="center" style="width:100%">
+        <table id="tabla02">
             <tr>
                 <th>Correo electrónico</th>
                 <td>ma.fernandezsa@alumnos.urjc.es</td>
@@ -49,6 +81,9 @@
             </tr>
         </table>
     </p><hr>
+    </div>
+
+    <div>
     <p>
         <h2>Aptitudes</h2>
         <h3>Lenguajes de Programación</h3>
@@ -68,7 +103,9 @@
         </ul>
 
     </p><hr>
+    </div>
 
+    <div>
     <p>
         <h2>Formación</h2>
         <ul>
@@ -77,6 +114,9 @@
             <li>Colegio Nazaret ~ 1996-2009</li>
         </ul>
     </p><hr>
+    </div>
+
+    <div>
     <p>
         <h2>Experiencia laboral</h2>
         <ul>
@@ -84,5 +124,6 @@
             <li>Conserje y Auxiliar de Seguridad - CCS Controladores y Servicios Auxiliares, S.L.</li>
         </ul>
     </p><hr>
+    </div>
 </body>
 </html>
