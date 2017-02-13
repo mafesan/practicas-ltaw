@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es-es">
-
+<!--http://www.w3schools.com/graphics/game_intro.asp-->
 <head>
     <title>Pacman 1.0 by mghfdez</title>
     <link rel="shortcut icon" href="blue-ghost.ico"/>
@@ -16,45 +16,53 @@
     clear: left;
     text-align: center;
     }
+    #myCanvas{
+        background-color: black;
+    }
     .canvas-space {
       padding: 3em;
       align: center;
     }
-    #myCanvas {
-      background-color: blue;
-    }
     body {
         background-image:url(Pacman-Ghosts-Fever-4K-UHD-Wallpaper.jpg);
-        background-color: gray;
         font-family: helvetica;
         margin-left:20px;
     }
     </style>
 </head>
-<body>
+<body onload='drawGhost();'>
   <div class="header-footer">
     <header>
       <h1>Comecocos 1.0</h1>
     </header>
   </div>
   <div class="canvas-space">
-    <img id="pacman" src="pacman.png">
-    <canvas id="myCanvas" width="600" height="400" style="border:1px solid #000000;">
+
+    <canvas id="myCanvas" width="600" height="400" style="border:1px solid blue;">
     Your browser does not support the HTML5 canvas tag.
     </canvas>
     <script id="background-lines">
 
-    var pacman_img = document.getElementById("pacman");
+
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
+    var ghost_img = new Image();
+    ghost_img.src = 'blue-ghost.ico';
     var ancho=600;
     var largo=400;
     var lin_h=40;
     var lin_v=40;
 
+    function drawGhost(){
+        this.ctx.drawImage(this.ghost_img, 275, 170, 45, 45);
+    }
+
+    ctx.strokeStyle = '#ffff00';
+    ctx.lineWidth = 3;
     ctx.moveTo(0,lin_v);
     ctx.lineTo(lin_v,lin_v);
     ctx.stroke();
+
 
     ctx.moveTo(lin_h,0);
     ctx.lineTo(lin_h,lin_h);
@@ -84,7 +92,10 @@
     ctx.lineTo(ancho-lin_h,largo-lin_v);
     ctx.stroke();
 
-    ctx.drawImage(pacman_img, 300, 200, 40, 40);
+
+
+
+
     </script>
   </div>
   <div class="header-footer">
