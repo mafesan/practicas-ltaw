@@ -16,7 +16,8 @@
     clear: left;
     text-align: center;
     }
-    #myCanvas{
+    canvas {
+        border:1px solid blue;
         background-color: black;
     }
     .canvas-space {
@@ -30,76 +31,55 @@
     }
     </style>
 </head>
-<body onload='drawGhost();'>
-  <div class="header-footer">
-    <header>
-      <h1>Comecocos 1.0</h1>
-    </header>
-  </div>
+<body onload="startGame();">
   <div class="canvas-space">
+    <script>
 
-    <canvas id="myCanvas" width="600" height="400" style="border:1px solid blue;">
-    Your browser does not support the HTML5 canvas tag.
-    </canvas>
-    <script id="background-lines">
-
-
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
     var ghost_img = new Image();
     ghost_img.src = 'blue-ghost.ico';
-    var ancho=600;
-    var largo=400;
-    var lin_h=40;
-    var lin_v=40;
+    var myGamePiece;
 
-    function drawGhost(){
-        this.ctx.drawImage(this.ghost_img, 275, 170, 45, 45);
+    var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 600;
+        this.canvas.height = 400;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 20);
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
     }
 
-    ctx.strokeStyle = '#ffff00';
-    ctx.lineWidth = 3;
-    ctx.moveTo(0,lin_v);
-    ctx.lineTo(lin_v,lin_v);
-    ctx.stroke();
+    function startGame() {
+        myGameArea.start();
+        myGamePiece = new component(30, 30, "yellow", 10, 120);
+    }
 
+    function component(width, height, color, x, y) {
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.update = function(){
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }
 
-    ctx.moveTo(lin_h,0);
-    ctx.lineTo(lin_h,lin_h);
-    ctx.stroke();
+    function updateGameArea() {
+        myGameArea.clear();
+        myGamePiece.x += 1;
+        myGamePiece.update();
+    }
 
-    ctx.moveTo(ancho-lin_h,0);
-    ctx.lineTo(ancho-lin_h,lin_h);
-    ctx.stroke();
-
-    ctx.moveTo(ancho,lin_v);
-    ctx.lineTo(ancho-lin_v,lin_v);
-    ctx.stroke();
-
-    ctx.moveTo(lin_v,largo);
-    ctx.lineTo(lin_h,largo-lin_v);
-    ctx.stroke();
-
-    ctx.moveTo(0,largo-lin_v);
-    ctx.lineTo(lin_h,largo-lin_v);
-    ctx.stroke();
-
-    ctx.moveTo(ancho,largo-lin_v);
-    ctx.lineTo(ancho-lin_h,largo-lin_v);
-    ctx.stroke();
-
-    ctx.moveTo(ancho-lin_h,largo);
-    ctx.lineTo(ancho-lin_h,largo-lin_v);
-    ctx.stroke();
-
-
-
-
-
+    function drawGhost(x, y, width, heigth){
+        this.ctx.drawImage(this.ghost_img, x, y, width, heigth);
+    }
     </script>
-  </div>
-  <div class="header-footer">
-    <footer>Version 1.0 by mghfdez</footer>
   </div>
 </body>
 </html>
