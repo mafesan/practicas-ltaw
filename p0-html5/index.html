@@ -18,13 +18,43 @@
     text-align: center;
     }
     body {
-        background-color: gray;
+        background-image: url("fondo.jpg");
+        background-repeat: no-repeat;
+        background-position: right top;
+        margin-right: 200px;
+        background-attachment: fixed;
         font-family: helvetica;
         margin-left:20px;
     }
-    p {
-        border: 2px solid black;
-        border-radius: 5px;
+    .nav ul {
+        border: 7px solid gray;
+        border-radius: 10px;
+        list-style-type: none;
+        margin: 0;
+        margin-left:20px;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+    }
+
+    .nav li {
+        float: left;
+    }
+
+    .nav li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    div {
+        border: 10px solid black;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 25px;
+        box-shadow: 10px 10px 5px #777777;
     }
     #img01 {
         width:65px;
@@ -34,6 +64,9 @@
     #tabla02 {
         width:70%;
         text-align: left;
+    }
+    #apt-list {
+        align: center;
     }
     </style>
 </head>
@@ -47,10 +80,11 @@
     <nav class="nav">
         <!--TODO: links locales-->
         <ul>
-            <li><a href="#">Datos de contacto</a></li>
-            <li><a href="#">Aptitudes</a></li>
-            <li><a href="#">Formación</a></li>
-            <li><a href="#">Experiencia laboral</a></li>
+            <li><a href="#contacto">Datos de contacto</a></li>
+            <li><a href="#skills">Aptitudes</a></li>
+            <li><a href="#edu">Formación</a></li>
+            <li><a href="#work">Experiencia laboral</a></li>
+    </nav>
     <div>
     <section>
     <p id="encabezado">
@@ -72,8 +106,8 @@
 
     </div>
 
-    <div>
-    <p>
+    <div class="blurred-box">
+    <p id="contacto">
         <h2>Datos de contacto</h2>
         <table id="tabla02">
             <tr>
@@ -105,17 +139,17 @@
     </p>
     </div>
 
-    <div>
-    <p>
+    <div class="blurred-box">
+    <p id="skills">
         <h2>Aptitudes</h2>
         <h3>Lenguajes de Programación</h3>
-        <ul>
+        <ul id="apt-list">
             <li>Python<span style="padding:40px"><progress value="75" max="100">50%</progress></span></li>
-            <li>Matlab<progress value="50" max="100">50%</progress></li>
-            <li>ADA<progress value="60" max="100">50%</progress></li>
-            <li>MySQL<progress value="35" max="100">50%</progress></li>
-            <li>Java<progress value="15" max="100">50%</progress></li>
-            <li>Javascript+HTML5+CSS3: In progress <progress value="30" max="100">50%</progress></li>
+            <li>Matlab<span style="padding:40px"><progress value="50" max="100">50%</progress></span></li>
+            <li>ADA<span style="padding:40px"><progress value="60" max="100">50%</progress></span></li>
+            <li>MySQL<span style="padding:40px"><progress value="35" max="100">50%</progress></span></li>
+            <li>Java<span style="padding:40px"><progress value="15" max="100">50%</progress></span></li>
+            <li>Javascript+HTML5+CSS3: In progress<span style="padding:40px"><progress value="30" max="100">50%</progress></span></li>
         </ul>
         <h3>Idiomas</h4>
         <ul>
@@ -127,8 +161,8 @@
 
     </div>
 
-    <div>
-    <p>
+    <div class="blurred-box">
+    <p id="edu">
         <h2>Formación</h2>
         <ul>
             <li>Grado ISAM, URJC ~ 2011-Actualidad</li>
@@ -138,8 +172,8 @@
     </p>
     </div>
 
-    <div>
-    <p>
+    <div class="blurred-box">
+    <p id="work">
         <h2>Experiencia laboral</h2>
         <ul>
             <li>Técnico de apoyo en investigación - Libresoft, GSyC (URJC)</li>
