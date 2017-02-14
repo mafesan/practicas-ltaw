@@ -39,6 +39,19 @@
     ghost_img.src = 'blue-ghost.ico';
     var pacman_img = new Image();
     pacman_img.src = 'pacman.png';
+
+    var arrow_r_img = new Image();
+    arrow_r_img.src = 'arrow-r.png';
+
+    var arrow_l_img = new Image();
+    arrow_l_img.src = 'arrow-l.png';
+
+    var arrow_u_img = new Image();
+    arrow_u_img.src = 'arrow-u.png';
+
+    var arrow_d_img = new Image();
+    arrow_d_img.src = 'arrow-d.png';
+
     var myPacman;
     var myGhost;
 
@@ -56,6 +69,32 @@
         window.addEventListener('keyup', function (e) {
             myGameArea.key = false;
         })
+        window.addEventListener('mousedown', function (e) {
+            myGameArea.x = e.pageX;
+            myGameArea.y = e.pageY;
+        })
+        window.addEventListener('mouseup', function (e) {
+            myGameArea.x = false;
+            myGameArea.y = false;
+        })
+        window.addEventListener('touchstart', function (e) {
+            myGameArea.x = e.pageX;
+            myGameArea.y = e.pageY;
+        })
+        window.addEventListener('touchend', function (e) {
+            myGameArea.x = false;
+            myGameArea.y = false;
+        })
+        /*window.addEventListener('touchmove', function (e) {
+            myGameArea.x = e.touches[0].screenX;
+            myGameArea.y = e.touches[0].screenY;
+        })
+        window.addEventListener('mousemove', function (e) {
+            myGameArea.x = e.pageX;
+            myGameArea.y = e.pageY;
+        })*/
+
+
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -64,6 +103,10 @@
 
     function startGame() {
         myGameArea.start();
+        myUpBtn = new component(30, 30, 50, 10, arrow_u_img);
+        myDownBtn = new component(30, 30, 50, 70, arrow_d_img);
+        myLeftBtn = new component(30, 30, 20, 40, arrow_l_img);
+        myRightBtn = new component(30, 30, 80, 40, arrow_r_img);
         myPacman = new component(45, 45, 10, 120, pacman_img);
         myGhost = new component(45, 45, 250, 250, ghost_img);
     }
@@ -84,6 +127,18 @@
           this.x += this.speedX;
           this.y += this.speedY;
         }
+        this.clicked = function() {
+          var myleft = this.x;
+          var myright = this.x + (this.width);
+          var mytop = this.y;
+          var mybottom = this.y + (this.height);
+          var clicked = true;
+          if ((mybottom < myGameArea.y) || (mytop > myGameArea.y)
+           || (myright < myGameArea.x) || (myleft > myGameArea.x)) {
+              clicked = false;
+          }
+          return clicked;
+        }
       }
 
     function controlCharacter(character){
@@ -101,6 +156,11 @@
         controlCharacter(myPacman);
         myPacman.newPos();
         myPacman.update();
+        myUpBtn.update();
+        myDownBtn.update();
+        myLeftBtn.update();
+        myRightBtn.update();
+        mouseCharacter(myGhost);
         myGhost.update();
     }
 
@@ -125,13 +185,35 @@
       myPacman.speedY = 0;
     }
 
+    function touchCharacter(character){
+      this.character = character;
+      if (myGameArea.touchX && myGameArea.touchY) {
+        this.character.x = myGameArea.x;
+        this.character.y = myGameArea.y;
+      }
+    }
+
+    function mouseCharacter(character) {
+      this.character = character;
+      if (myGameArea.x && myGameArea.y) {
+        if (myUpBtn.clicked()) {
+            this.character.y -= 1;
+        }
+        if (myDownBtn.clicked()) {
+            this.character.y += 1;
+        }
+        if (myLeftBtn.clicked()) {
+            this.character += -1;
+        }
+        if (myRightBtn.clicked()) {
+            this.character.x += 1;
+        }
+      }
+    }
+
+
+
     </script>
-    <!--Button controls
-    <button onclick="moveup()">UP</button>
-    <button onclick="movedown()">DOWN</button>
-    <button onclick="moveleft()">LEFT</button>
-    <button onclick="moveright()">RIGHT</button>
-    <button onclick="stopMove()">STOP</button> -->
   </div>
 </body>
 </html>
