@@ -40,18 +40,6 @@
     var pacman_img = new Image();
     pacman_img.src = 'pacman.png';
 
-    var arrow_r_img = new Image();
-    arrow_r_img.src = 'arrow-r.png';
-
-    var arrow_l_img = new Image();
-    arrow_l_img.src = 'arrow-l.png';
-
-    var arrow_u_img = new Image();
-    arrow_u_img.src = 'arrow-u.png';
-
-    var arrow_d_img = new Image();
-    arrow_d_img.src = 'arrow-d.png';
-
     var myPacman;
     var myGhost;
 
@@ -62,13 +50,14 @@
         this.canvas.height = 400;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(updateGameArea, 20);
+        this.interval = setInterval(updateGameArea, 25);
         window.addEventListener('keydown', function (e) {
             myGameArea.key = e.keyCode;
         })
         window.addEventListener('keyup', function (e) {
             myGameArea.key = false;
         })
+        /*
         window.addEventListener('mousedown', function (e) {
             myGameArea.x = e.pageX;
             myGameArea.y = e.pageY;
@@ -85,7 +74,7 @@
             myGameArea.x = false;
             myGameArea.y = false;
         })
-        /*window.addEventListener('touchmove', function (e) {
+        window.addEventListener('touchmove', function (e) {
             myGameArea.x = e.touches[0].screenX;
             myGameArea.y = e.touches[0].screenY;
         })
@@ -93,8 +82,6 @@
             myGameArea.x = e.pageX;
             myGameArea.y = e.pageY;
         })*/
-
-
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -103,10 +90,6 @@
 
     function startGame() {
         myGameArea.start();
-        myUpBtn = new component(30, 30, 50, 10, arrow_u_img);
-        myDownBtn = new component(30, 30, 50, 70, arrow_d_img);
-        myLeftBtn = new component(30, 30, 20, 40, arrow_l_img);
-        myRightBtn = new component(30, 30, 80, 40, arrow_r_img);
         myPacman = new component(45, 45, 10, 120, pacman_img);
         myGhost = new component(45, 45, 250, 250, ghost_img);
     }
@@ -127,18 +110,6 @@
           this.x += this.speedX;
           this.y += this.speedY;
         }
-        this.clicked = function() {
-          var myleft = this.x;
-          var myright = this.x + (this.width);
-          var mytop = this.y;
-          var mybottom = this.y + (this.height);
-          var clicked = true;
-          if ((mybottom < myGameArea.y) || (mytop > myGameArea.y)
-           || (myright < myGameArea.x) || (myleft > myGameArea.x)) {
-              clicked = false;
-          }
-          return clicked;
-        }
       }
 
     function controlCharacter(character){
@@ -151,66 +122,27 @@
 
     function updateGameArea() {
         myGameArea.clear();
-        myPacman.speedX = 0;
-        myPacman.speedY = 0;
+        stopCharacter(myPacman);
         controlCharacter(myPacman);
         myPacman.newPos();
+
+        moveCharacter(myGhost, 'horizontal');
+        myGhost.newPos();
+
         myPacman.update();
-        myUpBtn.update();
-        myDownBtn.update();
-        myLeftBtn.update();
-        myRightBtn.update();
-        mouseCharacter(myGhost);
         myGhost.update();
     }
 
-    function moveup() {
-      myPacman.speedY -= 1;
-    }
-
-    function movedown() {
-      myPacman.speedY += 1;
-    }
-
-    function moveleft() {
-      myPacman.speedX -= 1;
-    }
-
-    function moveright() {
-      myPacman.speedX += 1;
-    }
-
-    function stopMove(){
-      myPacman.speedX = 0;
-      myPacman.speedY = 0;
-    }
-
-    function touchCharacter(character){
+    function stopCharacter(character){
       this.character = character;
-      if (myGameArea.touchX && myGameArea.touchY) {
-        this.character.x = myGameArea.x;
-        this.character.y = myGameArea.y;
-      }
+      this.character.speedX = 0;
+      this.character.speedY = 0;
     }
 
-    function mouseCharacter(character) {
+    function moveCharacter(character, mode){
       this.character = character;
-      if (myGameArea.x && myGameArea.y) {
-        if (myUpBtn.clicked()) {
-            this.character.y -= 1;
-        }
-        if (myDownBtn.clicked()) {
-            this.character.y += 1;
-        }
-        if (myLeftBtn.clicked()) {
-            this.character += -1;
-        }
-        if (myRightBtn.clicked()) {
-            this.character.x += 1;
-        }
-      }
+      /*FIXME*/
     }
-
 
 
     </script>
