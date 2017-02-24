@@ -123,6 +123,7 @@
         this.speedY = speedY;
         this.x = x;
         this.y = y;
+        this.angle = 0;
         this.image = image;
         if (type == "rect"){
             this.update = function() {
@@ -132,8 +133,12 @@
             }
         }else{
             this.update = function(){
-              this.ctx = myGameArea.context;
-              this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+                ctx = myGameArea.context;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.drawImage(this.image, this.width/-2, this.height/-2, this.width, this.height);
+                ctx.restore();
             }
         }
         this.newPos = function() {
@@ -161,25 +166,26 @@
       }
 
     function controlCharacter(character){
-      this.character = character;
-      if (myGameArea.key && myGameArea.key == 37) {this.character.speedX = -3; this.character.speedY = 0; }
-      if (myGameArea.key && myGameArea.key == 39) {this.character.speedX = 3; this.character.speedY = 0; }
-      if (myGameArea.key && myGameArea.key == 38) {this.character.speedY = -3; this.character.speedX = 0;}
-      if (myGameArea.key && myGameArea.key == 40) {this.character.speedY = 3; this.character.speedX = 0;}
-      crashBorder(character);
+        // Imprimir posicion de teclado
+        this.character = character;
+        if (myGameArea.key && myGameArea.key == 37) {this.character.speedX = -3; this.character.speedY = 0; this.character.angle = Math.PI;}
+        if (myGameArea.key && myGameArea.key == 39) {this.character.speedX = 3; this.character.speedY = 0; this.character.angle = 0; }
+        if (myGameArea.key && myGameArea.key == 38) {this.character.speedY = -3; this.character.speedX = 0; this.character.angle = -Math.PI/2;}
+        if (myGameArea.key && myGameArea.key == 40) {this.character.speedY = 3; this.character.speedX = 0; this.character.angle = Math.PI/2;}
+        crashBorder(character);
     }
 
     function crashBorder(character){
-      this.limitX =  myGameArea.canvas.width - this.character.width;
-      this.limitY = myGameArea.canvas.height - this.character.height;
+      this.limitX =  myGameArea.canvas.width ;
+      this.limitY = myGameArea.canvas.height ;
       /*TODO: Probar esto para que al chocar, multiplicar por -1*/
-      if (this.character.x > this.limitX){
+      if (this.character.x > (this.limitX - (this.character.width/2))){
         this.character.speedX = -2; this.character.speedY = 0;
-      } else if (this.character.y > this.limitY) {
+      } else if (this.character.y > (this.limitY - (this.character.height/2))) {
         this.character.speedY = -2; this.character.speedX = 0;
-      } else if (this.character.x < 0) {
+      } else if (this.character.x < (this.character.width/2)) {
         this.character.speedX = 2; this.character.speedY = 0;
-      } else if (this.character.y < 0) {
+        } else if (this.character.y < (this.character.height/2)) {
         this.character.speedY = 2; this.character.speedX = 0;
       }
     }
@@ -217,7 +223,13 @@
 
     function moveCharacter(character, mode){
       this.character = character;
-
+      /*if (this.character.speedX > 0){
+          this.character.angle = 0;
+      } else if (this.character.speedX < 0) {
+          this.character.angle = Math.PI/2;
+      } else{
+          this.character.angle = 0;
+      }*/
       crashBorder(character);
       /*FIXME: Poner velocidad del personaje como parámetro*/
       /*TODO*/
