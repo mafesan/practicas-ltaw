@@ -60,6 +60,9 @@
   <div class="canvas-space">
     <script>
 
+    var homerdoh_img = new Image();
+    homerdoh_img.src = 'homersimpsondoh.png';
+
     var blue_ghost_img = new Image();
     blue_ghost_img.src = 'blue-ghost.png';
     var pacman_img = new Image();
@@ -76,7 +79,7 @@
         this.canvas.width = 600;
         this.canvas.height = 400;
         this.context = this.canvas.getContext("2d");
-        this.context.font = "30px Arial";
+        this.context.font = "60px Verdana";
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
@@ -205,7 +208,6 @@
     function crashBorder(character){
       this.limitX =  myGameArea.canvas.width ;
       this.limitY = myGameArea.canvas.height ;
-      /*TODO: Probar esto para que al chocar, multiplicar por -1*/
       if (this.character.x > (this.limitX - (this.character.width/2))){
         this.character.speedX = -2; this.character.speedY = 0;
       } else if (this.character.y > (this.limitY - (this.character.height/2))) {
@@ -220,11 +222,12 @@
     function updateGameArea() {
         if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost)) {
             myGameArea.stop();
+            myGameArea.clear();
             cur_ctx = myGameArea.context;
             cur_ctx.fillStyle = "red";
             cur_ctx.textAlign = "center";
-            cur_ctx.fillText("Game Over", myGameArea.canvas.width/2, myGameArea.canvas.height/2);
-
+            cur_ctx.fillText("Game Over", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
+            cur_ctx.drawImage(homerdoh_img, myGameArea.canvas.width-255, myGameArea.canvas.height-300, 255, 300);
             document.getElementById("restart").style.display='block';
         } else {
             myGameArea.clear();
