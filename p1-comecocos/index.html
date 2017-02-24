@@ -3,7 +3,7 @@
 <!--http://www.w3schools.com/graphics/game_intro.asp-->
 <head>
     <title>Pacman 1.0 by mghfdez</title>
-    <link rel="shortcut icon" href="blue-ghost.ico"/>
+    <link rel="shortcut icon" href="blue-ghost.png"/>
     <meta charset="UTF-8">
     <meta name="description" content="Comecocos 1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +52,7 @@
         this.canvas.height = 400;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         window.addEventListener('keydown', function (e) {
             myGameArea.key = e.keyCode;
@@ -87,18 +88,35 @@
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
     }
     }
+
+    function everyinterval(n) {
+        if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+        return false;
+    }
+
+    function restartGame(){
+        myGameArea.clear();
+        startGame();
+    }
+
 
     function startGame() {
         myGameArea.start();
-        myPacman = new component(45, 45, 10, 120, 0, 0, pacman_img);
-        myBlueGhost = new component(45, 45, 250, 250, 2, 0, blue_ghost_img);
-        myOrangeGhost = new component(45, 45, 70, 70, 0, 2, orange_ghost_img);
+
+        myPacman = new component(45, 45, 10, 120, 0, 0, pacman_img,'char');
+        myBlueGhost = new component(45, 45, 250, 250, 2, 0, blue_ghost_img,'char');
+        myOrangeGhost = new component(45, 45, 70, 70, 0, 2, orange_ghost_img, 'char');
+
+        myObstacle  = new component(10, 200, 400, 120, 0, 0, 'blue', 'rect');
 
     }
 
-    function component(width, height, x, y, speedX, speedY, image) {
+    function component(width, height, x, y, speedX, speedY, image, type) {
         this.width = width;
         this.height = height;
         this.speedX = speedX;
@@ -106,13 +124,39 @@
         this.x = x;
         this.y = y;
         this.image = image;
-        this.update = function(){
-          this.ctx = myGameArea.context;
-          this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        if (type == "rect"){
+            this.update = function() {
+                ctx = myGameArea.context;
+                ctx.fillStyle = image;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        }else{
+            this.update = function(){
+              this.ctx = myGameArea.context;
+              this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            }
         }
         this.newPos = function() {
           this.x += this.speedX;
           this.y += this.speedY;
+        }
+        this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((mybottom < othertop) ||
+               (mytop > otherbottom) ||
+               (myright < otherleft) ||
+               (myleft > otherright)) {
+           crash = false;
+        }
+        return crash;
         }
       }
 
@@ -141,20 +185,28 @@
     }
 
     function updateGameArea() {
-        myGameArea.clear();
-        stopCharacter(myPacman);
-        controlCharacter(myPacman);
-        myPacman.newPos();
+        if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost)) {
+            myGameArea.stop();
+        } else {
+            myGameArea.clear();
+            stopCharacter(myPacman);
+            controlCharacter(myPacman);
 
-        moveCharacter(myBlueGhost, 'horizontal');
-        myBlueGhost.newPos();
+            myObstacle.newPos();
 
-        moveCharacter(myOrangeGhost, 'vertical');
-        myOrangeGhost.newPos();
+            myPacman.newPos();
 
-        myPacman.update();
-        myBlueGhost.update();
-        myOrangeGhost.update();
+            moveCharacter(myBlueGhost, 'horizontal');
+            myBlueGhost.newPos();
+
+            moveCharacter(myOrangeGhost, 'vertical');
+            myOrangeGhost.newPos();
+
+            myObstacle.update();
+            myPacman.update();
+            myBlueGhost.update();
+            myOrangeGhost.update();
+        }
     }
 
     function stopCharacter(character){
@@ -173,6 +225,10 @@
 
 
     </script>
+  </div>
+  <div>
+      <button onclick="startGame();">Start Game</button>
+      <button onclick="restartGame();">Restart Game</button>
   </div>
 </body>
 </html>
