@@ -76,6 +76,7 @@
     var myBlueGhost;
     var myOrangeGhost;
     var myRedGhost;
+    var myObstacles;
 
     var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -175,11 +176,12 @@
         myWakaSound = new sound("sounds/pacman_chomp.wav");
         myDeathSound = new sound("sounds/pacman_death.wav");
 
-        myPacman = new component(45, 45, 60, 45, 0, 0, pacman_img,'char');
-        myBlueGhost = new component(45, 45, 0, 170, 2, 0, blue_ghost_img,'char');
-        myOrangeGhost = new component(45, 45, 170, 170, 0, 2, orange_ghost_img, 'char');
-        myRedGhost = new component(45, 45, 500, 430, 2, 0, red_ghost_img, 'char');
+        myPacman = new component(20, 20, 430, 430, 0, 0, pacman_img,'char');
+        myBlueGhost = new component(45, 45, 45, 170, 0, 0, blue_ghost_img,'char');
+        myOrangeGhost = new component(45, 45, 170, 170, 0, 0, orange_ghost_img, 'char');
+        myRedGhost = new component(45, 45, 500, 430, 0, 0, red_ghost_img, 'char');
 
+        //Antes: velocidades 2,0 ; 0,2 ; 2,0
         //Dibujo escenario
         c1  = new component(140, 140, 0, 0, 0, 0, 'blue', 'rect');
         c2  = new component(140, 140, myGameArea.canvas.width-140, 0, 0, 0, 'blue', 'rect');
@@ -194,7 +196,7 @@
         c9  = new component(140, 200, 660, 200, 0, 0, 'blue', 'rect');
 
 
-
+        myObstacles = [c1,c2,c3,c4,c5,c6,c7,c8,c9];
 
 
         myBackgroundMusic.play();
@@ -278,8 +280,24 @@
       }
     }
 
+    function crashScene(character, scene_obj){
+      this.limitX =  scene_obj.width ;
+      this.limitY = scene_obj.height ;
+      if (this.character.x < (this.limitX - (this.character.width/2))){
+        this.character.speedX = 2; this.character.speedY = 0;
+      } else if (this.character.y < (this.limitY - (this.character.height/2))) {
+        this.character.speedY = 2; this.character.speedX = 0;
+      } else if (this.character.x > (this.character.width/2)) {
+        this.character.speedX = -2; this.character.speedY = 0;
+      } else if (this.character.y > (this.character.height/2)) {
+        this.character.speedY = -2; this.character.speedX = 0;
+      }
+    }
+
+
     function updateGameArea() {
         if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost) || myPacman.crashWith(myRedGhost)) {
+
             myBackgroundMusic.stop();
             document.getElementById("sound-stop").style.display='none';
             myDeathSound.play();
@@ -292,21 +310,20 @@
             cur_ctx.fillText("Game Over", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
             cur_ctx.drawImage(homerdoh_img, myGameArea.canvas.width-255, myGameArea.canvas.height-300, 255, 300);
             document.getElementById("restart").style.display='block';
+
         } else {
 
             myGameArea.clear();
             stopCharacter(myPacman);
             controlCharacter(myPacman);
 
-            c1.newPos();
-            c2.newPos();
-            c3.newPos();
-            c4.newPos();
-            c5.newPos();
-            c6.newPos();
-            c7.newPos();
-            c8.newPos();
-            c9.newPos();
+            for (i = 0; i < myObstacles.length; i += 1) {
+              if (myPacman.crashWith(myObstacles[i])) {
+                  
+                  console.log("crashing with object:");
+                  console.log(myObstacles[i].x, myObstacles[i].y);
+              }
+            }
 
             myPacman.newPos();
 
@@ -319,15 +336,10 @@
             moveCharacter(myRedGhost, 'horizontal');
             myRedGhost.newPos();
 
-            c1.update();
-            c2.update();
-            c3.update();
-            c4.update();
-            c5.update();
-            c6.update();
-            c7.update();
-            c8.update();
-            c9.update();
+
+            for (i = 0; i < myObstacles.length; i += 1) {
+              myObstacles[i].update();
+            }
 
             myPacman.update();
             myBlueGhost.update();
