@@ -72,12 +72,15 @@
     var red_ghost_img = new Image();
     red_ghost_img.src = 'images/red-ghost.png';
 
+    var white_dot_img = new Image();
+    white_dot_img.src = 'images/whitedot.png';
 
     var myPacman;
     var myBlueGhost;
     var myOrangeGhost;
     var myRedGhost;
     var myObstacles;
+    var myDots;
 
     var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -153,9 +156,9 @@
         myDeathSound = new sound("sounds/pacman_death.wav");
 
         myPacman = new component(35, 35, 430, 430, 0, 0, pacman_img,'char');
-        myBlueGhost = new component(35, 35, 45, 170, 0, 0, blue_ghost_img,'char');
-        myOrangeGhost = new component(35, 35, 170, 170, 0, 0, orange_ghost_img, 'char');
-        myRedGhost = new component(35, 35, 500, 430, 0, 0, red_ghost_img, 'char');
+        myBlueGhost = new component(35, 35, 45, 170, 2, 0, blue_ghost_img,'char');
+        myOrangeGhost = new component(35, 35, 170, 170, 0, 2, orange_ghost_img, 'char');
+        myRedGhost = new component(35, 35, 500, 430, 2, 0, red_ghost_img, 'char');
 
         //Antes: velocidades 2,0 ; 0,2 ; 2,0
         //Dibujo escenario
@@ -174,6 +177,9 @@
 
         myObstacles = [c1,c2,c3,c4,c5,c6,c7,c8,c9];
 
+        myDot = new component(20, 20, 315, 430, 0, 0, white_dot_img, 'elem');
+        myDot2 = new component(20, 20, 280, 430, 0, 0, white_dot_img, 'elem');
+        myDots = [myDot, myDot2];
 
         myBackgroundMusic.play();
         document.getElementById("sound-start").style.display='none';
@@ -293,6 +299,13 @@
 
             myPacman.newPos();
 
+            for (i = 0; i < myDots.length; i += 1) {
+              if (myPacman.crashWith(myDots[i])) {
+                myDots[i].width = 0;
+                myDots[i].height = 0;
+              }
+            }
+
             moveCharacter(myBlueGhost, 'horizontal');
             myBlueGhost.newPos();
 
@@ -305,6 +318,11 @@
 
             for (i = 0; i < myObstacles.length; i += 1) {
               myObstacles[i].update();
+            }
+
+            for (i = 0; i < myDots.length; i += 1) {
+              console.log(myDots[i]);
+              myDots[i].update();
             }
 
             myPacman.update();
