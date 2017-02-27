@@ -72,6 +72,7 @@
     var red_ghost_img = new Image();
     red_ghost_img.src = 'images/red-ghost.png';
 
+
     var myPacman;
     var myBlueGhost;
     var myOrangeGhost;
@@ -94,31 +95,6 @@
         window.addEventListener('keyup', function (e) {
             myGameArea.key = false;
         })
-        /*
-        window.addEventListener('mousedown', function (e) {
-            myGameArea.x = e.pageX;
-            myGameArea.y = e.pageY;
-        })
-        window.addEventListener('mouseup', function (e) {
-            myGameArea.x = false;
-            myGameArea.y = false;
-        })
-        window.addEventListener('touchstart', function (e) {
-            myGameArea.x = e.pageX;
-            myGameArea.y = e.pageY;
-        })
-        window.addEventListener('touchend', function (e) {
-            myGameArea.x = false;
-            myGameArea.y = false;
-        })
-        window.addEventListener('touchmove', function (e) {
-            myGameArea.x = e.touches[0].screenX;
-            myGameArea.y = e.touches[0].screenY;
-        })
-        window.addEventListener('mousemove', function (e) {
-            myGameArea.x = e.pageX;
-            myGameArea.y = e.pageY;
-        })*/
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -176,10 +152,10 @@
         myWakaSound = new sound("sounds/pacman_chomp.wav");
         myDeathSound = new sound("sounds/pacman_death.wav");
 
-        myPacman = new component(20, 20, 430, 430, 0, 0, pacman_img,'char');
-        myBlueGhost = new component(45, 45, 45, 170, 0, 0, blue_ghost_img,'char');
-        myOrangeGhost = new component(45, 45, 170, 170, 0, 0, orange_ghost_img, 'char');
-        myRedGhost = new component(45, 45, 500, 430, 0, 0, red_ghost_img, 'char');
+        myPacman = new component(35, 35, 430, 430, 0, 0, pacman_img,'char');
+        myBlueGhost = new component(35, 35, 45, 170, 0, 0, blue_ghost_img,'char');
+        myOrangeGhost = new component(35, 35, 170, 170, 0, 0, orange_ghost_img, 'char');
+        myRedGhost = new component(35, 35, 500, 430, 0, 0, red_ghost_img, 'char');
 
         //Antes: velocidades 2,0 ; 0,2 ; 2,0
         //Dibujo escenario
@@ -238,10 +214,10 @@
         var myright = this.x + (this.width);
         var mytop = this.y;
         var mybottom = this.y + (this.height);
-        var otherleft = otherobj.x;
-        var otherright = otherobj.x + (otherobj.width);
-        var othertop = otherobj.y;
-        var otherbottom = otherobj.y + (otherobj.height);
+        var otherleft = otherobj.x + (this.width/2);
+        var otherright = otherobj.x + (otherobj.width) + (this.width/2);
+        var othertop = otherobj.y + (this.height/2);
+        var otherbottom = otherobj.y + (otherobj.height) + (this.height/2);
         var crash = true;
         if ((mybottom < othertop) ||
                (mytop > otherbottom) ||
@@ -280,21 +256,6 @@
       }
     }
 
-    function crashScene(character, scene_obj){
-      this.limitX =  scene_obj.width ;
-      this.limitY = scene_obj.height ;
-      if (this.character.x < (this.limitX - (this.character.width/2))){
-        this.character.speedX = 2; this.character.speedY = 0;
-      } else if (this.character.y < (this.limitY - (this.character.height/2))) {
-        this.character.speedY = 2; this.character.speedX = 0;
-      } else if (this.character.x > (this.character.width/2)) {
-        this.character.speedX = -2; this.character.speedY = 0;
-      } else if (this.character.y > (this.character.height/2)) {
-        this.character.speedY = -2; this.character.speedX = 0;
-      }
-    }
-
-
     function updateGameArea() {
         if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost) || myPacman.crashWith(myRedGhost)) {
 
@@ -314,12 +275,17 @@
         } else {
 
             myGameArea.clear();
+
+            lastspeedX = myPacman.speedX;
+            lastspeedY = myPacman.speedY;
             stopCharacter(myPacman);
             controlCharacter(myPacman);
 
             for (i = 0; i < myObstacles.length; i += 1) {
               if (myPacman.crashWith(myObstacles[i])) {
-                  
+                  console.log("Changing: ", lastspeedX, lastspeedY)
+                  myPacman.speedX = -lastspeedX;
+                  myPacman.speedY = -lastspeedY;
                   console.log("crashing with object:");
                   console.log(myObstacles[i].x, myObstacles[i].y);
               }
