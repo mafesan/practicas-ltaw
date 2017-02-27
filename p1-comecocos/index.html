@@ -75,6 +75,8 @@
     var white_dot_img = new Image();
     white_dot_img.src = 'images/whitedot.png';
 
+    var myScore;
+    var myScoreText;
     var myPacman;
     var myBlueGhost;
     var myOrangeGhost;
@@ -149,6 +151,8 @@
 
         myGameArea.start();
 
+        myScoreText = new component("22px", "Consolas", 15, 50, 0, 0, "yellow",'text');// FIXME
+        myScore = 0;
         myBackgroundMusic = new sound("sounds/dp-atw.mp3");
 
         mySirenSound = new sound("sounds/pacman_siren_cut.mp3");
@@ -195,11 +199,18 @@
         this.y = y;
         this.angle = 0;
         this.image = image;
-        if (type == "rect"){
+        this.type = type;
+        if (this.type == "rect"){
             this.update = function() {
                 ctx = myGameArea.context;
                 ctx.fillStyle = image;
                 ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        }else if (this.type == "text") {
+            this.update = function() {
+              ctx.font = this.width + " " + this.height;
+              ctx.fillStyle = image;  // debería ser color
+              ctx.fillText(this.text, this.x, this.y);
             }
         }else{
             this.update = function(){
@@ -274,8 +285,10 @@
             cur_ctx = myGameArea.context;
             cur_ctx.fillStyle = "red";
             cur_ctx.textAlign = "center";
+            cur_ctx.font = "60px Verdana";
             cur_ctx.fillText("Game Over", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
             cur_ctx.drawImage(homerdoh_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
+            document.getElementById("sound-start").style.display='none';
             document.getElementById("restart").style.display='block';
 
         } else {
@@ -301,8 +314,12 @@
 
             for (i = 0; i < myDots.length; i += 1) {
               if (myPacman.crashWith(myDots[i])) {
+                if (myDots[i].width != 0){
+                  myScore += 10;
+                }
                 myDots[i].width = 0;
                 myDots[i].height = 0;
+
               }
             }
 
@@ -324,6 +341,9 @@
               console.log(myDots[i]);
               myDots[i].update();
             }
+
+            myScoreText.text="SCORE: " + String(myScore);
+            myScoreText.update();
 
             myPacman.update();
             myBlueGhost.update();
