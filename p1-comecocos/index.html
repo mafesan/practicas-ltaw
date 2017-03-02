@@ -81,14 +81,14 @@
     var myBlueGhost;
     var myOrangeGhost;
     var myRedGhost;
-    var myObstacles;
-    var myDots;
+    var myObstacles = [];
+    var myDots = [];
 
     var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 800;
-        this.canvas.height = 600;
+        this.canvas.width = 660;
+        this.canvas.height = 660;
         this.context = this.canvas.getContext("2d");
         this.context.font = "60px Verdana";
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
@@ -138,7 +138,7 @@
 
     function prestartGame(){
       myBeginningMusic = new sound("sounds/pacman_beginning.wav");
-      myBeginningMusic.play();
+      //myBeginningMusic.play();
       document.getElementById("sound-start").style.display='none';
       document.getElementById("sound-stop").style.display='none';
       document.getElementById("restart").style.display='none';
@@ -149,6 +149,8 @@
         document.getElementById("restart").style.display='none';
         document.getElementById("start").style.display='none';
 
+        myObstacles = [];
+        myDots = [];
         myGameArea.start();
 
         myScoreText = new component("22px", "Consolas", 15, 50, 0, 0, "yellow",'text');// FIXME
@@ -159,33 +161,58 @@
         myWakaSound = new sound("sounds/pacman_chomp.wav");
         myDeathSound = new sound("sounds/pacman_death.wav");
 
-        myPacman = new component(35, 35, 430, 430, 0, 0, pacman_img,'char');
-        myBlueGhost = new component(35, 35, 45, 170, 2, 0, blue_ghost_img,'char');
-        myOrangeGhost = new component(35, 35, 170, 170, 0, 2, orange_ghost_img, 'char');
-        myRedGhost = new component(35, 35, 500, 430, 2, 0, red_ghost_img, 'char');
+        myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
+        myBlueGhost = new component(45, 45, 30, 210, 2, 0, blue_ghost_img,'char');
+        myOrangeGhost = new component(45, 45, 210, 270, 0, 2, orange_ghost_img, 'char');
+        myRedGhost = new component(45, 45, 450, 390, 0, -2, red_ghost_img, 'char');
 
         //Antes: velocidades 2,0 ; 0,2 ; 2,0
         //Dibujo escenario
-        c1  = new component(140, 140, 0, 0, 0, 0, 'blue', 'rect');
-        c2  = new component(140, 140, myGameArea.canvas.width-140, 0, 0, 0, 'blue', 'rect');
-        c3  = new component(140, 140, 0, myGameArea.canvas.height-140, 0, 0, 'blue', 'rect');
-        c4  = new component(140, 140, myGameArea.canvas.width-140, myGameArea.canvas.height-140, 0, 0, 'blue', 'rect');
+        myObstacles.push(new component(60, 60, 300, 0, 0, 0, 'blue', 'rect'));
 
-        c5  = new component(400, 140, 200, 0, 0, 0, 'blue', 'rect');
-        c6  = new component(400, 140, 200, 460, 0, 0, 'blue', 'rect');
-        c7  = new component(400, 200, 200, 200, 0, 0, 'blue', 'rect');
+        myObstacles.push(new component(60, 120, 60, 60, 0, 0, 'blue', 'rect'));
 
-        c8  = new component(140, 200, 0, 200, 0, 0, 'blue', 'rect');
-        c9  = new component(140, 200, 660, 200, 0, 0, 'blue', 'rect');
+        myObstacles.push(new component(60, 120, 180, 60, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 240, 120, 0, 0, 'blue', 'rect'));
 
+        myObstacles.push(new component(60, 60, 360, 120, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 420, 60, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 540, 60, 0, 0, 'blue', 'rect'));
 
-        myObstacles = [c1,c2,c3,c4,c5,c6,c7,c8,c9];
+        myObstacles.push(new component(60, 120, 0, 240, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(120, 60, 60, 240, 0, 0, 'blue', 'rect'));
 
-        myDot = new component(20, 20, 315, 430, 0, 0, white_dot_img, 'elem');
-        myDot2 = new component(20, 20, 280, 430, 0, 0, white_dot_img, 'elem');
-        myDots = [myDot, myDot2];
+        myObstacles.push(new component(180, 60, 240, 240, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 240, 300, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 360, 300, 0, 0, 'blue', 'rect'));
 
-        myBackgroundMusic.play();
+        myObstacles.push(new component(120, 60, 480, 240, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 600, 240, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 60, 60, 420, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 120, 360, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 480, 360, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 540, 420, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(180, 60, 240, 420, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 300, 480, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 60, 60, 540, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 180, 540, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 420, 540, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 60, 540, 540, 0, 0, 'blue', 'rect'));
+
+        for (i = 30; i <= 660; i += 60) {
+          for (j = 30; j <= 660; j += 60) {
+            myDots.push(new component(10, 10, i, j, 0, 0, white_dot_img, 'dot'));
+          }
+        }
+
+        //myBackgroundMusic.play();
         document.getElementById("sound-start").style.display='none';
         document.getElementById("sound-stop").style.display='block';
     }
@@ -297,6 +324,8 @@
 
             lastspeedX = myPacman.speedX;
             lastspeedY = myPacman.speedY;
+
+
             stopCharacter(myPacman);
             controlCharacter(myPacman);
 
@@ -319,7 +348,6 @@
                 }
                 myDots[i].width = 0;
                 myDots[i].height = 0;
-
               }
             }
 
@@ -332,14 +360,13 @@
             moveCharacter(myRedGhost, 'horizontal');
             myRedGhost.newPos();
 
-
-            for (i = 0; i < myObstacles.length; i += 1) {
-              myObstacles[i].update();
-            }
-
             for (i = 0; i < myDots.length; i += 1) {
               console.log(myDots[i]);
               myDots[i].update();
+            }
+
+            for (i = 0; i < myObstacles.length; i += 1) {
+              myObstacles[i].update();
             }
 
             myScoreText.text="SCORE: " + String(myScore);
@@ -349,6 +376,7 @@
             myBlueGhost.update();
             myOrangeGhost.update();
             myRedGhost.update();
+
         }
     }
 
