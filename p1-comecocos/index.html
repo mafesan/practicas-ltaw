@@ -64,16 +64,11 @@
     homerdoh_img.src = 'images/homersimpsondoh.png';
 
     var blue_ghost_img = new Image();
-    blue_ghost_img.src = 'images/blue-ghost.png';
     var pacman_img = new Image();
-    pacman_img.src = 'images/pacman.png';
     var orange_ghost_img = new Image();
-    orange_ghost_img.src = 'images/orange-ghost.png';
     var red_ghost_img = new Image();
-    red_ghost_img.src = 'images/red-ghost.png';
-
     var white_dot_img = new Image();
-    white_dot_img.src = 'images/whitedot.png';
+
 
     var myScore;
     var myScoreText;
@@ -96,6 +91,7 @@
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
+        this.main_character = "pacman";
         window.addEventListener('keydown', function (e) {
             myGameArea.key = e.keyCode;
         })
@@ -177,11 +173,28 @@
 
         myLivesText = new component("22px", "Verdana", 675, 90, 0, 0, "yellow", 'text');
         myTexts.push(myLivesText);
+
+        if (myGameArea.main_character == "pacman"){
+            pacman_img.src = 'images/pacman.png';
+            blue_ghost_img.src = 'images/blue-ghost.png';
+            orange_ghost_img.src = 'images/orange-ghost.png';
+            red_ghost_img.src = 'images/red-ghost.png';
+            white_dot_img.src = 'images/whitedot.png';
+
+        } else if (myGameArea.main_character == "daftpunk") {
+            pacman_img.src = 'images/daft-silver.png';
+            blue_ghost_img.src = 'images/blue-ghost.png';
+            orange_ghost_img.src = 'images/orange-ghost.png';
+            red_ghost_img.src = 'images/red-ghost.png';
+            white_dot_img.src = 'images/whitedot.png';
+        }
+
         myBackgroundMusic = new sound("sounds/dp-atw.mp3");
 
         mySirenSound = new sound("sounds/pacman_siren_cut.wav");
         myWakaSound = new sound("sounds/pacman_waka.wav");
         myDeathSound = new sound("sounds/pacman_death.wav");
+
 
         myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
         myBlueGhost = new component(45, 45, 30, 210, 2, 0, blue_ghost_img,'char');
@@ -324,6 +337,9 @@
         if (myGameArea.key && myGameArea.key == 40) {this.character.speedY = 3; this.character.speedX = 0; this.character.angle = Math.PI/2;}
         if (this.character.speedX != 0 || this.character.speedY != 0) {
           mySirenSound.play();
+        }
+        if (myGameArea.main_character != "pacman"){
+            this.character.angle = 0;
         }
         //crashBorder(character);
     }
