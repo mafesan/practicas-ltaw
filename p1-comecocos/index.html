@@ -143,11 +143,13 @@
     function lightRestartGame(lives, score, dots){
         myDeathSound.play();
         myGameArea.stop();
-        myGameArea.clear();
-        startGame();
-        myLives = lives;
-        myScore = score;
-        myDots = dots;
+        window.setTimeout(function(){
+            myGameArea.clear();
+            startGame();
+            myLives = lives;
+            myScore = score;
+            myDots = dots;
+        }, 1000);
     }
 
     function prestartGame(){
@@ -188,6 +190,12 @@
 
         //Antes: velocidades 2,0 ; 0,2 ; 2,0
         //Dibujo escenario
+        myObstacles.push(new component(2, 660, 660, 0, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(2, 660, 0, 0, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(660, 2, 0, 0, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(660, 2, 0, 658, 0, 0, 'blue', 'rect'));
+
+
         myObstacles.push(new component(60, 60, 300, 0, 0, 0, 'blue', 'rect'));
 
         myObstacles.push(new component(60, 120, 60, 60, 0, 0, 'blue', 'rect'));
@@ -226,7 +234,7 @@
 
         myObstacles.push(new component(60, 60, 540, 540, 0, 0, 'blue', 'rect'));
 
-        myObstacles.push(new component(1, 660, 660, 0, 0, 0, 'blue', 'rect'));
+
 
         for (i = 30; i <= 660; i += 60) {
           for (j = 30; j <= 660; j += 60) {
@@ -317,7 +325,7 @@
         if (this.character.speedX != 0 || this.character.speedY != 0) {
           mySirenSound.play();
         }
-        crashBorder(character);
+        //crashBorder(character);
     }
 
     function crashBorder(character){
@@ -345,7 +353,6 @@
         if (myLives == 0){
             myBackgroundMusic.stop();
             document.getElementById("sound-stop").style.display='none';
-            myDeathSound.play();
             myGameArea.stop();
             myGameArea.clear();
 
