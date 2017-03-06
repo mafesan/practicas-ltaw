@@ -16,9 +16,17 @@
     clear: left;
     text-align: center;
     }
+    #draganddrop {
+        width: 150px;
+        height: 150px;
+        padding: 10px;
+        border: 3px solid blue;
+        background-color: black;
+    }
     canvas {
         border:1px solid blue;
         background-color: black;
+        align-self: center;
     }
     .canvas-space {
       padding: 3em;
@@ -58,6 +66,8 @@
 </head>
 <body onload="prestartGame();">
   <div class="canvas-space">
+  <center>
+    <canvas id="myCanvas"></canvas>
     <script>
 
     var homerdoh_img = new Image();
@@ -80,15 +90,16 @@
     var myDots = [];
     var myLives = 3;
     var myTexts = [];
+    var myChoice;
 
     var myGameArea = {
-    canvas : document.createElement("canvas"),
+    canvas : document.getElementById("myCanvas"),
     start : function() {
         this.canvas.width = 660+180;
         this.canvas.height = 660;
         this.context = this.canvas.getContext("2d");
+        this.canvas.style.display='block';
         this.context.font = "60px Verdana";
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         this.main_character = "pacman";
@@ -121,12 +132,31 @@
     document.body.appendChild(this.sound);
     this.play = function(){
         this.sound.play();
-
+        /*
+        document.getElementById("sound-start").style.display='none';
+        document.getElementById("sound-stop").style.display='block';
+        */
     }
     this.stop = function(){
         this.sound.pause();
         document.getElementById("sound-start").style.display='block';
+        document.getElementById("sound-stop").style.display='none';
     }
+    }
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+        myChoice = data;
     }
 
     function restartGame(){
@@ -154,13 +184,14 @@
       document.getElementById("sound-start").style.display='none';
       document.getElementById("sound-stop").style.display='none';
       document.getElementById("restart").style.display='none';
+      document.getElementById("myCanvas").style.display='none';
     }
 
     function startGame() {
 
         document.getElementById("restart").style.display='none';
         document.getElementById("start").style.display='none';
-
+        document.getElementById("charsel").style.display='none';
         myObstacles = [];
         myDots = [];
         myTexts  = [];
@@ -196,7 +227,18 @@
         myDeathSound = new sound("sounds/pacman_death.wav");
 
 
-        myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
+        if (myChoice == "drag1"){
+          myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
+        } else if (myChoice == "drag2") {
+          myPacman = new component(40, 40, 330, 330, 0, 0, blue_ghost_img,'char');
+        } else if (myChoice == "drag3") {
+          myPacman = new component(40, 40, 330, 330, 0, 0, orange_ghost_img,'char');
+        } else {
+          alert("Selecciona personaje!");
+          location.reload();
+          //myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
+        }
+
         myBlueGhost = new component(45, 45, 30, 210, 2, 0, blue_ghost_img,'char');
         myOrangeGhost = new component(45, 45, 210, 270, 0, 2, orange_ghost_img, 'char');
         myRedGhost = new component(45, 45, 450, 390, 0, -1, red_ghost_img, 'char');
@@ -255,7 +297,6 @@
           }
         }
 
-        //myBackgroundMusic.play();
         document.getElementById("sound-start").style.display='none';
         document.getElementById("sound-stop").style.display='block';
     }
@@ -480,15 +521,31 @@
       /*FIXME: Poner velocidad del personaje como parámetro*/
       /*TODO*/
     }
+    function hideStartButton(){
+      document.getElementById("sound-start").style.display='none';
+    }
 
 
     </script>
   </div>
-  <div>
-      <button class="button" id="start" onclick="startGame();">Start Game</button>
-      <button class="button" id="restart" onclick="restartGame();">Restart Game</button>
-      <button class="button" id="sound-start" onclick="myBackgroundMusic.stop(); myBackgroundMusic.play();">Start Music</button>
-      <button class="button" id="sound-stop" onclick="myBackgroundMusic.stop();">Stop Music</button>
+  <div id="charsel">
+  <center>
+  <div id="draganddrop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <br>
+  <div style="background-color:black;width:600px;">
+  <img id="drag1" src="images/pacman.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
+  <img id="drag2" src="images/blue-ghost.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
+  <img id="drag3" src="images/orange-ghost.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
   </div>
+</center>
+  </div>
+    <center>
+      <button class="button" id="start" onclick="startGame(); myBackgroundMusic.play();">Start Game</button>
+      <button class="button" id="restart" onclick="restartGame();">Restart Game</button>
+      <button class="button" id="sound-start" onclick="myBackgroundMusic.stop(); myBackgroundMusic.play(); hideStartButton;">Start Music</button>
+      <button class="button" id="sound-stop" onclick="myBackgroundMusic.stop();">Stop Music</button>
+    </center>
+  </div>
+</center>
 </body>
 </html>
