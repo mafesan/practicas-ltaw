@@ -228,16 +228,33 @@
 
 
         if (myChoice == "drag1"){
-          myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
+            myGameArea.main_character == "pacman";
+            pacman_img.src = 'images/pacman.png';
+            blue_ghost_img.src = 'images/blue-ghost.png';
+            orange_ghost_img.src = 'images/orange-ghost.png';
+            red_ghost_img.src = 'images/red-ghost.png';
+            white_dot_img.src = 'images/whitedot.png';
         } else if (myChoice == "drag2") {
-          myPacman = new component(40, 40, 330, 330, 0, 0, blue_ghost_img,'char');
+            myGameArea.main_character == "pikachu";
+            pacman_img.src = 'images/pika-pacman.png';
+            blue_ghost_img.src = 'images/gengar.png';
+            orange_ghost_img.src = 'images/poke-skull.png';
+            red_ghost_img.src = 'images/haunter.png';
+            white_dot_img.src = 'images/pokeball.png';
         } else if (myChoice == "drag3") {
-          myPacman = new component(40, 40, 330, 330, 0, 0, orange_ghost_img,'char');
+          myGameArea.main_character == "link";
+          pacman_img.src = 'images/link.png';
+          blue_ghost_img.src = 'images/skull.png';
+          orange_ghost_img.src = 'images/skull.png';
+          red_ghost_img.src = 'images/skull.png';
+          white_dot_img.src = 'images/rupee.png';
         } else {
           alert("Selecciona personaje!");
           location.reload();
           //myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
         }
+
+        myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
 
         myBlueGhost = new component(45, 45, 30, 210, 2, 0, blue_ghost_img,'char');
         myOrangeGhost = new component(45, 45, 210, 270, 0, 2, orange_ghost_img, 'char');
@@ -293,7 +310,7 @@
 
         for (i = 30; i <= 660; i += 60) {
           for (j = 30; j <= 660; j += 60) {
-            myDots.push(new component(10, 10, i, j, 0, 0, white_dot_img, 'dot'));
+            myDots.push(new component(15, 15, i, j, 0, 0, white_dot_img, 'dot'));
           }
         }
 
@@ -534,8 +551,8 @@
   <br>
   <div style="background-color:black;width:600px;">
   <img id="drag1" src="images/pacman.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
-  <img id="drag2" src="images/blue-ghost.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
-  <img id="drag3" src="images/orange-ghost.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
+  <img id="drag2" src="images/pika-pacman.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
+  <img id="drag3" src="images/link.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
   </div>
 </center>
   </div>
