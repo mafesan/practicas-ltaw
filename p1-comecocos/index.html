@@ -72,6 +72,8 @@
 
     var homerdoh_img = new Image();
     homerdoh_img.src = 'images/homersimpsondoh.png';
+    var homerwin_img = new Image();
+    homerwin_img.src = 'images/win.png';
 
     var blue_ghost_img = new Image();
     var pacman_img = new Image();
@@ -91,6 +93,9 @@
     var myLives = 3;
     var myTexts = [];
     var myChoice;
+    var eatenDots;
+
+    var maxDots = 48;
 
     var myGameArea = {
     canvas : document.getElementById("myCanvas"),
@@ -132,10 +137,10 @@
     document.body.appendChild(this.sound);
     this.play = function(){
         this.sound.play();
-        /*
+
         document.getElementById("sound-start").style.display='none';
         document.getElementById("sound-stop").style.display='block';
-        */
+
     }
     this.stop = function(){
         this.sound.pause();
@@ -180,7 +185,7 @@
 
     function prestartGame(){
       myBeginningMusic = new sound("sounds/pacman_beginning.wav");
-      //myBeginningMusic.play();
+      myBeginningMusic.play();
       document.getElementById("sound-start").style.display='none';
       document.getElementById("sound-stop").style.display='none';
       document.getElementById("restart").style.display='none';
@@ -195,6 +200,7 @@
         myObstacles = [];
         myDots = [];
         myTexts  = [];
+        eatenDots = 0;
         myGameArea.start();
 
 
@@ -204,23 +210,6 @@
 
         myLivesText = new component("22px", "Verdana", 675, 90, 0, 0, "yellow", 'text');
         myTexts.push(myLivesText);
-
-        if (myGameArea.main_character == "pacman"){
-            pacman_img.src = 'images/pacman.png';
-            blue_ghost_img.src = 'images/blue-ghost.png';
-            orange_ghost_img.src = 'images/orange-ghost.png';
-            red_ghost_img.src = 'images/red-ghost.png';
-            white_dot_img.src = 'images/whitedot.png';
-
-        } else if (myGameArea.main_character == "daftpunk") {
-            pacman_img.src = 'images/daft-silver.png';
-            blue_ghost_img.src = 'images/blue-ghost.png';
-            orange_ghost_img.src = 'images/orange-ghost.png';
-            red_ghost_img.src = 'images/red-ghost.png';
-            white_dot_img.src = 'images/whitedot.png';
-        }
-
-        myBackgroundMusic = new sound("sounds/dp-atw.mp3");
 
         mySirenSound = new sound("sounds/pacman_siren_cut.wav");
         myWakaSound = new sound("sounds/pacman_waka.wav");
@@ -234,6 +223,7 @@
             orange_ghost_img.src = 'images/orange-ghost.png';
             red_ghost_img.src = 'images/red-ghost.png';
             white_dot_img.src = 'images/whitedot.png';
+            myBackgroundMusic = new sound("sounds/dp-atw.mp3");
         } else if (myChoice == "drag2") {
             myGameArea.main_character == "pikachu";
             pacman_img.src = 'images/pika-pacman.png';
@@ -241,6 +231,7 @@
             orange_ghost_img.src = 'images/poke-skull.png';
             red_ghost_img.src = 'images/haunter.png';
             white_dot_img.src = 'images/pokeball.png';
+            myBackgroundMusic = new sound("sounds/pokemon.ogg");
         } else if (myChoice == "drag3") {
           myGameArea.main_character == "link";
           pacman_img.src = 'images/link.png';
@@ -248,6 +239,7 @@
           orange_ghost_img.src = 'images/skull.png';
           red_ghost_img.src = 'images/skull.png';
           white_dot_img.src = 'images/rupee.png';
+          myBackgroundMusic = new sound("sounds/zelda.ogg");
         } else {
           alert("Selecciona personaje!");
           location.reload();
@@ -439,7 +431,21 @@
             document.getElementById("sound-start").style.display='none';
             document.getElementById("restart").style.display='block';
 
-        } else {
+          } else if (eatenDots == maxDots){
+              myBackgroundMusic.stop();
+              document.getElementById("sound-stop").style.display='none';
+              myGameArea.stop();
+              myGameArea.clear();
+
+              cur_ctx = myGameArea.context;
+              cur_ctx.fillStyle = "red";
+              cur_ctx.textAlign = "center";
+              cur_ctx.font = "60px Verdana";
+              cur_ctx.fillText("You Win!", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
+              cur_ctx.drawImage(homerwin_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
+              document.getElementById("sound-start").style.display='none';
+              document.getElementById("restart").style.display='block';
+            } else {
 
             myGameArea.clear();
 
@@ -488,6 +494,7 @@
                 if (myDots[i].width != 0){
                   myWakaSound.play();
                   myScore += 10;
+                  eatenDots += 1;
                 }
                 myDots[i].width = 0;
                 myDots[i].height = 0;
