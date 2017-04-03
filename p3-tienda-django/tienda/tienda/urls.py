@@ -15,11 +15,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from mi_tienda import views
+import mi_tienda
 
 urlpatterns = [
-    url(r'^mi_tienda/product/', views.music_detail, name='music_detail'),
-    url(r'^tienda/', views.index, name='index'),
+    url(r'^tienda/', include('mi_tienda.urls')),
     url(r'^admin/', include(admin.site.urls)),
-
+    url(r'^', include('mi_tienda.urls')),
 ]
