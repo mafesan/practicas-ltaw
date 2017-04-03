@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'discos/$', views.music_index),
     url(r'libros/$', views.book_index),
     url(r'bicis/$', views.bike_index),
-    url(r'product/(?P<product_type>\w+)/(?P<field1>\w+)/(?P<field2>\w+)$', views.product_detail),
+    url(r'product/(?P<product_type>\w+)/(?P<field1>\w+)/(?P<field2>\w+)', views.product_detail),
 ]

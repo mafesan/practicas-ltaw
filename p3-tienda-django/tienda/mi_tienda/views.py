@@ -30,6 +30,8 @@ def product_detail(request, product_type, field1, field2):
         for product in all_products:
             if (product.autor == field1) and (product.titulo == field2):
                 product_data = product
+                """product_data['titulo_guiones': product.titulo.replace(' ', '_')]
+                product_data['autor_guiones': product.autor.replace(' ', '_')]"""
     context = {'product_data': product_data}
 
     return render(request, 'mi_tienda/producto.html', context)
