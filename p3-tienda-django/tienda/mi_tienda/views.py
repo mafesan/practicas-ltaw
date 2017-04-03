@@ -14,13 +14,31 @@ def index(request):
     context = {'latest_music_list': latest_music_list, 'latest_book_list': latest_book_list, 'latest_bici_list': latest_bici_list}
     return render(request, 'mi_tienda/index.html', context)
 
-def music_detail(request):
-    response = '<html><head><title>Bad</title></head><body>Ups!</body></html>'
-    return HttpResponse(response)
+def product_detail(request, product_type, field1, field2):
+    print request
+    output = product_type + "," + field1 + ", " + field2
+
+    if product_type == 'discos':
+        all_products = Disco.objects.order_by('titulo')
+    elif (product_type == 'libros'):
+        all_products = Libro.objects.order_by('titulo')
+    else:
+        all_products = Bici.objects.order_by('modelo')
+
+    product_data = {}
+    if product_type == 'discos':
+        for product in all_products:
+            if (product.autor == field1) and (product.titulo == field2):
+                product_data = product
+    context = {'product_data': product_data}
+
+    return render(request, 'mi_tienda/producto.html', context)
+
 
 def music_index(request):
     print "paso por music_index"
-    context = {}
+    latest_music_list = Disco.objects.order_by('titulo')
+    context = {'latest_music_list': latest_music_list}
     return render(request, 'mi_tienda/index_discos.html', context)
 
 def book_index(request):

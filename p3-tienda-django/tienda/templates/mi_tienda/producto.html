@@ -86,14 +86,18 @@
     <div>
     <section>
     <h1 align="center"> Enjoy the music! </h1>
-    {% if latest_music_list %}
-        <ul>
-        {% for disco in latest_music_list %}
-            <li><a href="/tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}/">{{ disco.titulo }} - {{ disco.autor}}</a></li>
-        {% endfor %}
-        </ul>
+    {% if product_data %}
+    <h2 align="center"> Estás viendo: {{ product_data.titulo }} - {{ product_data.autor }}</h2>
+    <ul>
+        <li>Titulo: {{ product_data.titulo }}</li>
+        <li>Interprete: {{ product_data.autor }}</li>
+        <li>Precio: {{ product_data.precio }} €</li>
+        <li>Fecha de lanzamiento: {{ product_data.fecha_pub }}</li>
+        <li>Genero: {{ product_data.genero }}</li>
+        <li>Discografica: {{ product_data.discografica }}</li>
+    </ul>
     {% else %}
-        <p>No hay discos.</p>
+        <p>No tenemos ese disco todavía!.</p>
     {% endif %}
     </div>
     <div class="header-footer">

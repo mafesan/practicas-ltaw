@@ -5,7 +5,7 @@ class Libro(models.Model):
     titulo = models.CharField(max_length=200)
     autor = models.CharField(max_length=100)
     genero = models.CharField(max_length=30)
-    precio = models.FloatField()
+    precio = models.FloatField() #FIXME DecimalField
     editorial = models.CharField(max_length=50)
     fecha_pub = models.DateField('Fecha de publicacion')
     def __unicode__(self):

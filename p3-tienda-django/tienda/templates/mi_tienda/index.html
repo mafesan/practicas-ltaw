@@ -3,7 +3,7 @@
   <title>Red Hot Chili Shoppers</title>
   <style>
   body {
-      background-color:gray;
+      background-color:#1BA4D5;
       background-repeat: no-repeat;
       background-size: cover;
       background-position: right top;
@@ -68,7 +68,7 @@
     {% if latest_music_list %}
         <ul>
         {% for disco in latest_music_list %}
-            <li><a href="/tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}/">{{ disco.titulo }} </a></li>
+            <li><a href="/tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}">{{ disco.titulo }} - {{ disco.autor}}</a></li>
         {% endfor %}
         </ul>
     {% else %}
@@ -80,7 +80,7 @@
     {% if latest_book_list %}
         <ul>
         {% for libro in latest_book_list %}
-            <li><a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}/">{{ libro.titulo }}</a></li>
+            <li><a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}">{{ libro.titulo }} - {{ libro.autor}}</a></li>
         {% endfor %}
         </ul>
     {% else %}
@@ -92,7 +92,7 @@
     {% if latest_bici_list %}
         <ul>
         {% for bici in latest_bici_list %}
-            <li><a href="/tienda/product/bicis/{{ bici.marca }}/{{ bici.modelo }}/">{{ bici.modelo }}</a></li>
+            <li><a href="/tienda/product/bicis/{{ bici.marca }}/{{ bici.modelo }}">{{ bici.modelo }} de {{ bici.marca }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
