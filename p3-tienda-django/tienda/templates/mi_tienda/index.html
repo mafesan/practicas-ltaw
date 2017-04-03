@@ -1,0 +1,89 @@
+<html>
+<head>
+  <title>Red Hot Chili Shoppers</title>
+  <style>
+  .header-footer {
+  padding: 1em;
+  color: red;
+  background-color: black;
+  clear: left;
+  text-align: center;
+  }
+  .nav ul {
+      border: 7px solid gray;
+      border-radius: 10px;
+      list-style-type: none;
+      margin: 0;
+      margin-left:20px;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+  }
+
+  .nav li {
+      float: left;
+  }
+
+  .nav li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 50px;
+      text-decoration: none;
+  }
+  </style>
+</head>
+<body>
+  <div class="header-footer">
+  <header>
+    <h1> Red Hot Chili Shoppers </h1>
+    <h4> Prices from the Otherside! </h4>
+  </header>
+  </div>
+  <div>
+    <nav class="nav">
+      <ul>
+    <li><a href="/mi_tienda/main">Ver todo</a></li>
+    <li><a href="/mi_tienda/discos">Discos</a></li>
+    <li><a href="/mi_tienda/libros">Libros</a></li>
+    <li><a href="/mi_tienda/bicis">Bicis</a></li>
+      </ul>
+    </div>
+  <div>
+    <h3> Explora nuestros discos </h3>
+    {% if latest_music_list %}
+        <ul>
+        {% for disco in latest_music_list %}
+            <li><a href="/mi_tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}/">{{ disco.titulo }} </a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay discos.</p>
+    {% endif %}
+  </div>
+  <div>
+    <h3> Explora nuestros libros </h3>
+    {% if latest_book_list %}
+        <ul>
+        {% for libro in latest_book_list %}
+            <li><a href="/mi_tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}/">{{ libro.titulo }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay libros.</p>
+    {% endif %}
+  </div>
+  <div>
+    <h3> Explora nuestras bicis </h3>
+    {% if latest_bici_list %}
+        <ul>
+        {% for bici in latest_bici_list %}
+            <li><a href="/mi_tienda/product/bicis/{{ bici.marca }}/{{ bici.modelo }}/">{{ bici.modelo }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay bicis.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
