@@ -15,6 +15,7 @@ def index(request):
     return render(request, 'mi_tienda/index.html', context)
 
 def product_detail(request, product_type, field1, field2):
+    print "paso por product_detail"
     print request
     output = product_type + "," + field1 + ", " + field2
 
@@ -26,13 +27,24 @@ def product_detail(request, product_type, field1, field2):
         all_products = Bici.objects.order_by('modelo')
 
     product_data = {}
+    bool_product_data = {'is_libro': False, 'is_disco': False, 'is_bici': False}
     if product_type == 'discos':
+        bool_product_data['is_disco'] = True
         for product in all_products:
             if (product.autor == field1) and (product.titulo == field2):
                 product_data = product
-                """product_data['titulo_guiones': product.titulo.replace(' ', '_')]
-                product_data['autor_guiones': product.autor.replace(' ', '_')]"""
-    context = {'product_data': product_data}
+    elif product_type == 'libros':
+        bool_product_data['is_libro'] = True
+        for product in all_products:
+            if (product.autor == field1) and (product.titulo == field2):
+                product_data = product
+    elif product_type == 'bicis':
+        bool_product_data['is_bici'] = True
+        for product in all_products:
+            if (product.marca == field1) and (product.modelo == field2):
+                product_data = product
+
+    context = {'product_data': product_data, 'product_type': bool_product_data}
 
     return render(request, 'mi_tienda/producto.html', context)
 
@@ -45,10 +57,17 @@ def music_index(request):
 
 def book_index(request):
     print "paso por book_index"
-    context = {}
+    latest_book_list = Libro.objects.order_by('titulo')
+    context = {'latest_book_list': latest_book_list}
     return render(request, 'mi_tienda/index_libros.html', context)
 
 def bike_index(request):
     print "paso por bike_index"
-    context = {}
+    latest_bici_list = Bici.objects.order_by('modelo')
+    context = {'latest_bici_list': latest_bici_list}
     return render(request, 'mi_tienda/index_bicis.html', context)
+
+def carrito(request):
+    print "paso por carrito"
+    context = {}
+    return render(request, 'mi_tienda/carrito.html', context)

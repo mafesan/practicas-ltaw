@@ -16,6 +16,20 @@
     clear: left;
     text-align: center;
     }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      border: 1px solid #ddd;
+    }
+
+    ul li {
+        padding: 8px 16px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    ul li:last-child {
+        border-bottom: none
+    }
     body {
         background-image: url("fondo.jpg");
         background-repeat: no-repeat;
@@ -71,8 +85,8 @@
 
 <body>
     <div class="header-footer">
-    <header>
-    <h1 align="center">Red Hot Chili Shoppers - Enjoy the music!</h1>
+    <header id="my_header">
+    <h1 align="center">Red Hot Chili Shoppers</h1>
     </header>
     </div>
     <nav class="nav">
@@ -83,22 +97,78 @@
     <li><a href="/tienda/bicis">Bicis</a></li>
   </ul>
 </nav>
+{% load staticfiles %}
     <div>
-    <section>
-    <h1 align="center"> Enjoy the music! </h1>
-    {% if product_data %}
-    <h2 align="center"> Estás viendo: {{ product_data.titulo }} - {{ product_data.autor }}</h2>
-    <ul>
-        <li>Titulo: {{ product_data.titulo }}</li>
-        <li>Interprete: {{ product_data.autor }}</li>
-        <li>Precio: {{ product_data.precio }} €</li>
-        <li>Fecha de lanzamiento: {{ product_data.fecha_pub }}</li>
-        <li>Genero: {{ product_data.genero }}</li>
-        <li>Discografica: {{ product_data.discografica }}</li>
-    </ul>
-    {% else %}
-        <p>No tenemos ese disco todavía!.</p>
-    {% endif %}
+      {% if product_type.is_disco %}
+        {% if product_data %}
+          <h1 align="center"> Estás viendo: {{ product_data.titulo }} de {{ product_data.autor }}</h1>
+
+          <span><img src="{% static product_data.imagen %}" width="300" height="300"></img></span>
+        <span>
+          <ul>
+              <li>Titulo: {{ product_data.titulo }}</li>
+              <li>Interprete: {{ product_data.autor }}</li>
+              <li>Precio: {{ product_data.precio }} €</li>
+              <li>Fecha de lanzamiento: {{ product_data.fecha_pub }}</li>
+              <li>Genero: {{ product_data.genero }}</li>
+              <li>Discografica: {{ product_data.discografica }}</li>
+          </ul>
+        </span>
+        {% else %}
+            <p>Ups! Disco no encontrado :(</p>
+        {% endif %}
+      {% endif %}
+
+      {% if product_type.is_libro %}
+      <style>
+      .header-footer {
+      padding: 1em;
+      color: white;
+      background-color: orange;
+      clear: left;
+      text-align: center;
+      }
+      </style>
+        {% if product_data %}
+          <h1 align="center"> Estás viendo: {{ product_data.titulo }} de {{ product_data.autor }}</h1>
+          <ul>
+              <li>Titulo: {{ product_data.titulo }}</li>
+              <li>Interprete: {{ product_data.autor }}</li>
+              <li>Precio: {{ product_data.precio }} €</li>
+              <li>Fecha de lanzamiento: {{ product_data.fecha_pub }}</li>
+              <li>Genero: {{ product_data.genero }}</li>
+              <li>Editorial: {{ product_data.editorial }}</li>
+          </ul>
+        {% else %}
+            <p>Ups! Disco no encontrado :(</p>
+        {% endif %}
+      {% endif %}
+
+
+      {% if product_type.is_bici %}
+      <style>
+      .header-footer {
+      padding: 1em;
+      color: white;
+      background-color: green;
+      clear: left;
+      text-align: center;
+      }
+      </style>
+        {% if product_data %}
+          <h1 align="center"> Estás viendo: {{ product_data.modelo }} de {{ product_data.shimano }}</h1>
+          <ul>
+              <li>Modelo: {{ product_data.modelo }}</li>
+              <li>Marca: {{ product_data.marca }}</li>
+              <li>Precio: {{ product_data.precio }} €</li>
+              <li>Color: {{ product_data.color }}</li>
+              <li>Pulgadas: {{ product_data.pulgadas_rueda}}</li>
+              <li>Descripción: {{ product_data.descripcion }}</li>
+          </ul>
+        {% else %}
+            <p>Ups! Disco no encontrado :(</p>
+        {% endif %}
+      {% endif %}
     </div>
     <div class="header-footer">
     <footer>

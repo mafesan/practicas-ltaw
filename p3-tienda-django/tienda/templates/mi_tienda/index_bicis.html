@@ -24,6 +24,20 @@
         background-attachment: fixed;
         font-family: helvetica;
     }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      border: 1px solid #ddd;
+    }
+
+    ul li {
+        padding: 8px 16px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    ul li:last-child {
+        border-bottom: none
+    }
     .nav ul {
         border: 7px solid gray;
         border-radius: 10px;
@@ -86,7 +100,15 @@
     <div>
     <section>
     <h1 align="center"> Enjoy the cycling! </h1>
-
+    {% if latest_bici_list %}
+        <ul>
+        {% for bici in latest_bici_list %}
+            <li><a href="/tienda/product/discos/{{ bici.marca }}/{{ bici.modelo }}/">{{ bici.modelo }}, marca {{ bici.marca}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay bicis.</p>
+    {% endif %}
     </div>
     <div class="header-footer">
     <footer>

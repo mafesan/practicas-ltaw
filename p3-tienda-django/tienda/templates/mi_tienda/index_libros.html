@@ -24,6 +24,20 @@
         background-attachment: fixed;
         font-family: helvetica;
     }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      border: 1px solid #ddd;
+    }
+
+    ul li {
+        padding: 8px 16px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    ul li:last-child {
+        border-bottom: none
+    }
     .nav ul {
         border: 7px solid gray;
         border-radius: 10px;
@@ -85,8 +99,27 @@
 </nav>
     <div>
     <section>
-    <h1 align="center"> Enjoy the reading! </h1>
-
+    <form method="get">
+     ¿Estas buscando por...?:
+    <select name="search">
+     <option value="titulo" checked> Titulo</option>
+     <option value="autor"> Autor</option>
+     <option value="editorial"> Editorial</option>
+    </select>
+      <input type="search" name="data">
+      <input type="submit" value="Buscar">
+    </form>
+  </div>
+  <div>
+    {% if latest_book_list %}
+        <ul>
+        {% for libro in latest_book_list %}
+            <li><a href="/tienda/product/discos/{{ libro.autor }}/{{ libro.titulo }}/">{{ libro.titulo }} - {{ libro.autor}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay libros.</p>
+    {% endif %}
     </div>
     <div class="header-footer">
     <footer>
