@@ -5,7 +5,7 @@ from .models import Libro, Disco, Bici
 
 class LibroAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Info basica', {'fields': ['titulo', 'autor', 'precio']}),
+        ('Info basica', {'fields': ['titulo', 'autor', 'precio', 'imagen', 'cantidad']}),
         ('Info adicional', {'fields': ['editorial', 'genero', 'fecha_pub']}),
     ]
 

@@ -55,28 +55,6 @@
       text-decoration: none;
   }
 
-  div.gallery {
-    margin: 25px;
-    border: 1px solid #ccc;
-    float: left;
-    width: 180px;
-  }
-
-  div.gallery:hover {
-      border: 1px solid #777;
-  }
-
-  div.gallery img {
-      width: 100%;
-      height: auto;
-  }
-
-  div.desc {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #ccc;
-  }
-
   div {
       border: 10px solid black;
       border-radius: 10px;
@@ -88,8 +66,7 @@
   </style>
 </head>
 <body>
-  {% load static %}
-
+    {% load staticfiles %}
   <div class="header-footer">
   <header>
     <h1>Red Hot Chili Shoppers</h1>
@@ -98,34 +75,49 @@
   </div>
     <nav class="nav">
       <ul>
-    <li><a href="/tienda/todo">Ver todo</a></li>
+    <li><a href="/tienda/">Ver todo</a></li>
     <li><a href="/tienda/discos">Discos</a></li>
     <li><a href="/tienda/libros">Libros</a></li>
     <li><a href="/tienda/bicis">Bicis</a></li>
     <li><a href="/tienda/carrito">Mi Carro</a></li>
   </ul>
 </nav>
-
-  <div class="gallery">
-    <a href="/tienda/todo"><img src="{% static "img/all.png" %}" alt="Ver todo"/ width="100" height="100"/>
-    <div class="desc">Ver todo</div></a>
+  <div>
+    <h3> Explora nuestros discos </h3>
+    {% if latest_music_list %}
+        <ul>
+        {% for disco in latest_music_list %}
+            <li><a href="/tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}"><img src="{% static disco.imagen %}" width="100" height="100"><br>{{ disco.titulo }} - {{ disco.autor}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay discos.</p>
+    {% endif %}
   </div>
-
-  <div class="gallery">
-    <a href="/tienda/discos"><img src="{% static "img/music.png" %}" alt="Ver discos"/ width="100" height="100"/>
-    <div class="desc">Ver discos</div></a>
+  <div>
+    <h3> Explora nuestros libros </h3>
+    {% if latest_book_list %}
+        <ul>
+        {% for libro in latest_book_list %}
+            <li><a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}"><img src="{% static libro.imagen %}" width="75" height="100"></img><br>{{ libro.titulo }} - {{ libro.autor}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay libros.</p>
+    {% endif %}
   </div>
-
-  <div class="gallery">
-    <a href="/tienda/libros"><img src="{% static "img/book.png" %}" alt="Ver libros"/ width="100" height="100"/>
-    <div class="desc">Ver libros</div></a>
+  <div>
+    <h3> Explora nuestras bicis </h3>
+    {% if latest_bici_list %}
+        <ul>
+        {% for bici in latest_bici_list %}
+            <li><a href="/tienda/product/bicis/{{ bici.marca }}/{{ bici.modelo }}"><img src="{% static bici.imagen %}" width="100" height="75"></img><br>{{ bici.modelo }} de {{ bici.marca }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay bicis.</p>
+    {% endif %}
   </div>
-
-  <div class="gallery">
-    <a href="/tienda/bicis"><img src="{% static "img/bike.png" %}" alt="Ver bicis"/ width="100" height="100"/>
-    <div class="desc">Ver bicis</div></a>
-  </div>
-
   <div class="header-footer">
   <footer>
       &copy; Miguel Ángel F.S., 2017

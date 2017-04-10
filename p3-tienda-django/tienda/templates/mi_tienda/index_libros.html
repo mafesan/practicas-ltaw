@@ -84,6 +84,7 @@
 </head>
 
 <body>
+  {% load staticfiles %}
     <div class="header-footer">
     <header>
     <h1 align="center">Red Hot Chili Shoppers - Dive into wisdom!</h1>
@@ -95,6 +96,7 @@
     <li><a href="/tienda/discos">Discos</a></li>
     <li><a href="/tienda/libros">Libros</a></li>
     <li><a href="/tienda/bicis">Bicis</a></li>
+    <li><a href="/tienda/carrito">Mi Carro</a></li>
   </ul>
 </nav>
     <div>
@@ -114,7 +116,7 @@
     {% if latest_book_list %}
         <ul>
         {% for libro in latest_book_list %}
-            <li><a href="/tienda/product/discos/{{ libro.autor }}/{{ libro.titulo }}/">{{ libro.titulo }} - {{ libro.autor}}</a></li>
+            <li><a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}"><img src="{% static libro.imagen %}" width="150" height="200"></img><br>{{ libro.titulo }} - {{ libro.autor}}</a></li>
         {% endfor %}
         </ul>
     {% else %}

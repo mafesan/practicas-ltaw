@@ -95,15 +95,18 @@
     <li><a href="/tienda/discos">Discos</a></li>
     <li><a href="/tienda/libros">Libros</a></li>
     <li><a href="/tienda/bicis">Bicis</a></li>
+    <li><a href="/tienda/carrito">Mi Carro</a></li>
   </ul>
 </nav>
 {% load staticfiles %}
     <div>
+
       {% if product_type.is_disco %}
         {% if product_data %}
-          <h1 align="center"> Estás viendo: {{ product_data.titulo }} de {{ product_data.autor }}</h1>
-
-          <span><img src="{% static product_data.imagen %}" width="300" height="300"></img></span>
+        <form method="get" action="/comprar/disco/{{ product_data.autor }}/{{ product_data.titulo }}/">
+            <button type="submit">Añadir al carro</button>
+        </form>
+          <span><img src="{% static product_data.imagen %}" width="300" height="300"></img></span><br>
         <span>
           <ul>
               <li>Titulo: {{ product_data.titulo }}</li>
@@ -130,7 +133,11 @@
       }
       </style>
         {% if product_data %}
-          <h1 align="center"> Estás viendo: {{ product_data.titulo }} de {{ product_data.autor }}</h1>
+        <form method="get" action="/comprar/libro/{{ product_data.autor }}/{{ product_data.titulo }}/">
+            <button type="submit">Añadir al carro</button>
+        </form>
+          <br>
+          <img src="{% static product_data.imagen %}" width="200" height="300">
           <ul>
               <li>Titulo: {{ product_data.titulo }}</li>
               <li>Interprete: {{ product_data.autor }}</li>
@@ -140,7 +147,7 @@
               <li>Editorial: {{ product_data.editorial }}</li>
           </ul>
         {% else %}
-            <p>Ups! Disco no encontrado :(</p>
+            <p>Ups! Libro no encontrado :(</p>
         {% endif %}
       {% endif %}
 
@@ -156,19 +163,23 @@
       }
       </style>
         {% if product_data %}
-          <h1 align="center"> Estás viendo: {{ product_data.modelo }} de {{ product_data.shimano }}</h1>
+        <form method="get" action="/comprar/bici/{{ product_data.autor }}/{{ product_data.titulo }}/">
+            <button type="submit">Añadir al carro</button>
+        </form><br>
+          <img src="{% static product_data.imagen %}" width="400" height="300">
           <ul>
               <li>Modelo: {{ product_data.modelo }}</li>
               <li>Marca: {{ product_data.marca }}</li>
               <li>Precio: {{ product_data.precio }} €</li>
               <li>Color: {{ product_data.color }}</li>
               <li>Pulgadas: {{ product_data.pulgadas_rueda}}</li>
-              <li>Descripción: {{ product_data.descripcion }}</li>
+              <li>Descripción: <br> {{ product_data.descripcion }}</li>
           </ul>
         {% else %}
-            <p>Ups! Disco no encontrado :(</p>
+            <p>Ups! Bici no encontrada :(</p>
         {% endif %}
       {% endif %}
+
     </div>
     <div class="header-footer">
     <footer>

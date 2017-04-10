@@ -7,12 +7,17 @@ from django.template import loader
 from .models import Disco, Libro, Bici
 
 def index(request):
-    print "paso por index"
-    latest_music_list = Disco.objects.order_by('fecha_pub')
-    latest_book_list = Libro.objects.order_by('fecha_pub')
+    context = {}
+    return render(request, 'mi_tienda/index.html', context)
+
+
+def ver_todo(request):
+    print "paso por ver todo"
+    latest_music_list = Disco.objects.order_by('titulo')
+    latest_book_list = Libro.objects.order_by('titulo')
     latest_bici_list = Bici.objects.order_by('marca')
     context = {'latest_music_list': latest_music_list, 'latest_book_list': latest_book_list, 'latest_bici_list': latest_bici_list}
-    return render(request, 'mi_tienda/index.html', context)
+    return render(request, 'mi_tienda/ver-todo.html', context)
 
 def product_detail(request, product_type, field1, field2):
     print "paso por product_detail"
@@ -67,7 +72,8 @@ def bike_index(request):
     context = {'latest_bici_list': latest_bici_list}
     return render(request, 'mi_tienda/index_bicis.html', context)
 
-def carrito(request):
+def carrito(request, product_type, field1, field2):
     print "paso por carrito"
+    print (product_type, field1, field2)
     context = {}
     return render(request, 'mi_tienda/carrito.html', context)
