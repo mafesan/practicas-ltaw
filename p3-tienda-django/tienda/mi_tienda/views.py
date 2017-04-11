@@ -4,8 +4,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 
-from .models import Disco, Libro, Bici
+from .models import Disco, Libro, Bici, Carrito
 
+list_carrito = ()
 def index(request):
     context = {}
     return render(request, 'mi_tienda/index.html', context)
@@ -72,8 +73,14 @@ def bike_index(request):
     context = {'latest_bici_list': latest_bici_list}
     return render(request, 'mi_tienda/index_bicis.html', context)
 
-def carrito(request, product_type, field1, field2):
+def carrito(request):
     print "paso por carrito"
-    print (product_type, field1, field2)
     context = {}
+    return render(request, 'mi_tienda/carrito.html', context)
+
+def llenar_carrito(request, product_type, field1, field2):
+    print "paso por llenar carrito"
+    nuevo_objeto = Carrito.objects.create(tipo_producto=product_type, campo1=field1, campo2=field2)
+    list_carrito = Carrito.objects.order_by('tipo_producto')
+    context = {list_carrito}
     return render(request, 'mi_tienda/carrito.html', context)

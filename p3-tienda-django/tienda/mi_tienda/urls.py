@@ -10,6 +10,6 @@ urlpatterns = [
     url(r'libros/$', views.book_index),
     url(r'bicis/$', views.bike_index),
     url(r'carrito/$', views.carrito),
-    url(r'comprar/(?P<product_type>\w+)/(?P<field1>[\w ]+)/(?P<field2>[\w ]+)', views.carrito),
+    url(r'comprar/(?P<product_type>\w+)/(?P<field1>[\w ]+)/(?P<field2>[\w ]+)', views.llenar_carrito),
     url(r'product/(?P<product_type>\w+)/(?P<field1>[\w ]+)/(?P<field2>[\w ]+)', views.product_detail),
 ]

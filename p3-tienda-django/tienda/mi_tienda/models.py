@@ -40,3 +40,11 @@ class Bici(models.Model):
     cantidad = models.IntegerField(default=0)
     def __unicode__(self):
         return self.marca + ", " + self.modelo + " " + str(self.pulgadas_rueda)
+
+
+class Carrito(models.Model):
+    tipo_producto = models.CharField(max_length=200)
+    campo1 = models.CharField(max_length=200)
+    campo2 = models.CharField(max_length=200)
+    def __unicode__(self):
+        return self.tipo_producto + ": " + self.campo1 + " " + str(self.campo2)

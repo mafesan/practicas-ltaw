@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Libro, Disco, Bici
+from .models import Libro, Disco, Bici, Carrito
 
 class LibroAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -12,3 +12,4 @@ class LibroAdmin(admin.ModelAdmin):
 admin.site.register(Libro, LibroAdmin)
 admin.site.register(Disco)
 admin.site.register(Bici)
+admin.site.register(Carrito)
