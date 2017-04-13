@@ -17,7 +17,6 @@
     text-align: center;
     }
     body {
-        background-image: url("fondo.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         background-position: right top;
@@ -100,13 +99,23 @@
   </ul>
   </nav>
     <div>
-      <ul>
       {% if list_carrito %}
+        <form method="post" action="/pedido/">
+            <button type="submit">Hacer Pedido</button>
+        </form>
+        <ul>
         {% for product in list_carrito %}
             <li> {{ product.tipo_producto }}: {{ product.campo1}}, {{ product.campo2 }} </li>
+            <form method="get" action="/eliminar/{{ product.tipo_producto }}/{{ product.campo1 }}/{{ product.campo2 }}/">
+                <ul>
+                <button type="submit">Eliminar</button>
+                </ul>
+            </form>
         {% endfor %}
+        </ul>
+      {% else %}
+        <h3> No hay nada en el carrito </h3>
       {% endif %}
-      </ul>
     </div>
     <div>
     <section align="center">

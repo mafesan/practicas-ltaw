@@ -54,6 +54,27 @@
       padding: 14px 16px;
       text-decoration: none;
   }
+  div.gallery {
+    margin: 25px;
+    border: 1px solid #ccc;
+    float: left;
+    width: 180px;
+  }
+
+  div.gallery:hover {
+      border: 1px solid #777;
+  }
+
+  div.gallery img {
+      width: 100%;
+      height: auto;
+  }
+
+  div.desc {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+  }
 
   div {
       border: 10px solid black;
@@ -82,42 +103,36 @@
     <li><a href="/tienda/carrito">Mi Carro</a></li>
   </ul>
 </nav>
-  <div>
-    <h3> Explora nuestros discos </h3>
     {% if latest_music_list %}
-        <ul>
         {% for disco in latest_music_list %}
-            <li><a href="/tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}"><img src="{% static disco.imagen %}" width="100" height="100"><br>{{ disco.titulo }} - {{ disco.autor}}</a></li>
+            <div class="gallery">
+            <a href="/tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}"><img src="{% static disco.imagen %}" width="100" height="100"><br>{{ disco.titulo }} - {{ disco.autor}}</a></li>
+            </div>
         {% endfor %}
-        </ul>
     {% else %}
         <p>No hay discos.</p>
     {% endif %}
-  </div>
-  <div>
-    <h3> Explora nuestros libros </h3>
     {% if latest_book_list %}
-        <ul>
         {% for libro in latest_book_list %}
-            <li><a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}"><img src="{% static libro.imagen %}" width="75" height="100"></img><br>{{ libro.titulo }} - {{ libro.autor}}</a></li>
+            <div class="gallery">
+            <a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}"><img src="{% static libro.imagen %}" width="100" height="100"></img><br>{{ libro.titulo }} - {{ libro.autor}}</a></li>
+            </div>
         {% endfor %}
         </ul>
     {% else %}
         <p>No hay libros.</p>
     {% endif %}
-  </div>
-  <div>
-    <h3> Explora nuestras bicis </h3>
     {% if latest_bici_list %}
-        <ul>
         {% for bici in latest_bici_list %}
-            <li><a href="/tienda/product/bicis/{{ bici.marca }}/{{ bici.modelo }}"><img src="{% static bici.imagen %}" width="100" height="75"></img><br>{{ bici.modelo }} de {{ bici.marca }}</a></li>
+            <div class="gallery">
+            <a href="/tienda/product/bicis/{{ bici.marca }}/{{ bici.modelo }}"><img src="{% static bici.imagen %}" width="100" height="100"></img><br>{{ bici.modelo }} de {{ bici.marca }}</a></li>
+            </div>
         {% endfor %}
-        </ul>
     {% else %}
-        <p>No hay bicis.</p>
+            <div class="gallery">
+            No hay bicis
+            </div>
     {% endif %}
-  </div>
   <div class="header-footer">
   <footer>
       &copy; Miguel Ángel F.S., 2017

@@ -75,12 +75,20 @@ def bike_index(request):
 
 def carrito(request):
     print "paso por carrito"
-    context = {}
+    list_carrito = Carrito.objects.order_by('tipo_producto')
+    context = {'list_carrito': list_carrito}
     return render(request, 'mi_tienda/carrito.html', context)
 
 def llenar_carrito(request, product_type, field1, field2):
     print "paso por llenar carrito"
     nuevo_objeto = Carrito.objects.create(tipo_producto=product_type, campo1=field1, campo2=field2)
     list_carrito = Carrito.objects.order_by('tipo_producto')
-    context = {list_carrito}
+    context = {'nuevo_objeto': nuevo_objeto, 'list_carrito': list_carrito}
+    return render(request, 'mi_tienda/carrito.html', context)
+
+def eliminar_carrito(request, product_type, field1, field2):
+    print "paso por eliminar carrito"
+    #TODO
+    list_carrito = Carrito.objects.order_by('tipo_producto')
+    context = {'list_carrito': list_carrito}
     return render(request, 'mi_tienda/carrito.html', context)
