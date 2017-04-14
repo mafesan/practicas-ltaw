@@ -89,6 +89,7 @@ def llenar_carrito(request, product_type, field1, field2):
 def eliminar_carrito(request, product_type, field1, field2):
     print "paso por eliminar carrito"
     #TODO
+    Carrito.objects.filter(tipo_producto=product_type, campo1=field1, campo2=field2).delete()
     list_carrito = Carrito.objects.order_by('tipo_producto')
     context = {'list_carrito': list_carrito}
     return render(request, 'mi_tienda/carrito.html', context)
