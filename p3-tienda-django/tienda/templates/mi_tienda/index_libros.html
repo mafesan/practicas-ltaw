@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="es-es">
-
-<head>
-    <title> RHCS - enjoy the reading!</title>
-    <meta charset="UTF-8">
-    <meta name="description" content="Index">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Miguel Angel Fernandez">
-
-    <style>
+{% extends "mi_tienda/index.html" %}
+{% load static %}
+{% load staticfiles %}
+{% block headerstyle %}
     .header-footer {
     padding: 1em;
     color: white;
@@ -16,88 +9,11 @@
     clear: left;
     text-align: center;
     }
-    body {
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: right top;
-        background-attachment: fixed;
-        font-family: helvetica;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-      border: 1px solid #ddd;
-    }
-
-    ul li {
-        padding: 8px 16px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    ul li:last-child {
-        border-bottom: none
-    }
-    .nav ul {
-        border: 7px solid gray;
-        border-radius: 10px;
-        list-style-type: none;
-        margin: 0;
-        margin-left:20px;
-        padding: 0;
-        overflow: hidden;
-        background-color: #333;
-    }
-
-    .nav li {
-        float: left;
-    }
-
-    .nav li a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-
-    div {
-        border: 10px solid black;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 25px;
-        box-shadow: 10px 10px 5px #777777;
-    }
-    #img01 {
-        width:100px;
-        height:100px;
-        padding-right: 15px;
-    }
-    #tabla02 {
-        width:70%;
-        text-align: left;
-    }
-    #apt-list {
-        align: center;
-    }
-    </style>
-</head>
-
-<body>
-  {% load staticfiles %}
-    <div class="header-footer">
-    <header>
+{% endblock %}
+{% block header %}
     <h1 align="center">Red Hot Chili Shoppers - Dive into wisdom!</h1>
-    </header>
-    </div>
-    <nav class="nav">
-      <ul>
-    <li><a href="/tienda/">Ver todo</a></li>
-    <li><a href="/tienda/discos">Discos</a></li>
-    <li><a href="/tienda/libros">Libros</a></li>
-    <li><a href="/tienda/bicis">Bicis</a></li>
-    <li><a href="/tienda/carrito">Mi Carro</a></li>
-  </ul>
-</nav>
+{% endblock %}
+{% block content %}
     <div>
     <section>
     <form method="get">
@@ -111,21 +27,15 @@
       <input type="submit" value="Buscar">
     </form>
   </div>
-  <div>
     {% if latest_book_list %}
-        <ul>
         {% for libro in latest_book_list %}
-            <li><a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}"><img src="{% static libro.imagen %}" width="150" height="200"></img><br>{{ libro.titulo }} - {{ libro.autor}}</a></li>
+            <div class="gallery">
+            <a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}"><img src="{% static libro.imagen %}" width="150" height="200"></img><br>{{ libro.titulo }} - {{ libro.autor}}</a></li>
+            </div>
         {% endfor %}
-        </ul>
     {% else %}
-        <p>No hay libros.</p>
+      <div>
+        No hay libros
+      </div>
     {% endif %}
-    </div>
-    <div class="header-footer">
-    <footer>
-        &copy; Miguel Ángel F.S., 2017
-    </footer>
-    </div>
-</body>
-</html>
+{% endblock %}

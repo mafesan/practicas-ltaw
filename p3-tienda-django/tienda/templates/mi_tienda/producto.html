@@ -162,7 +162,7 @@
       }
       </style>
         {% if product_data %}
-        <form method="get" action="/comprar/bici/{{ product_data.autor }}/{{ product_data.titulo }}/">
+        <form method="get" action="/comprar/bici/{{ product_data.marca }}/{{ product_data.modelo }}/">
             <button type="submit">Añadir al carro</button>
         </form><br>
           <img src="{% static product_data.imagen %}" width="400" height="300">
