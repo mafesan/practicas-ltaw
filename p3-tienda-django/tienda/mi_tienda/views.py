@@ -23,34 +23,16 @@ def ver_todo(request):
 def product_detail(request, product_type, field1, field2):
     print "paso por product_detail"
     print request
-    output = product_type + "," + field1 + ", " + field2
-
-    if product_type == 'discos':
-        all_products = Disco.objects.order_by('titulo')
-    elif (product_type == 'libros'):
-        all_products = Libro.objects.order_by('titulo')
+    if product_type == "discos":
+        objeto = Disco.objects.get(autor=field1, titulo=field2)
+    elif product_type == "libros":
+        objeto = Libro.objects.get(autor=field1, titulo=field2)
+    elif product_type == "bicis":
+        objeto = Bici.objects.get(marca=field1, modelo=field2)
     else:
-        all_products = Bici.objects.order_by('modelo')
+        objeto = {}
 
-    product_data = {}
-    bool_product_data = {'is_libro': False, 'is_disco': False, 'is_bici': False}
-    if product_type == 'discos':
-        bool_product_data['is_disco'] = True
-        for product in all_products:
-            if (product.autor == field1) and (product.titulo == field2):
-                product_data = product
-    elif product_type == 'libros':
-        bool_product_data['is_libro'] = True
-        for product in all_products:
-            if (product.autor == field1) and (product.titulo == field2):
-                product_data = product
-    elif product_type == 'bicis':
-        bool_product_data['is_bici'] = True
-        for product in all_products:
-            if (product.marca == field1) and (product.modelo == field2):
-                product_data = product
-
-    context = {'product_data': product_data, 'product_type': bool_product_data}
+    context = {'product_data': objeto, 'product_type': product_type}
 
     return render(request, 'mi_tienda/producto.html', context)
 
@@ -81,15 +63,38 @@ def carrito(request):
 
 def llenar_carrito(request, product_type, field1, field2):
     print "paso por llenar carrito"
-    nuevo_objeto = Carrito.objects.create(tipo_producto=product_type, campo1=field1, campo2=field2)
-    list_carrito = Carrito.objects.order_by('tipo_producto')
-    context = {'nuevo_objeto': nuevo_objeto, 'list_carrito': list_carrito}
-    return render(request, 'mi_tienda/carrito.html', context)
+    if product_type == "disco":
+        objeto = Disco.objects.get(autor=field1, titulo=field2)
+    elif product_type == "libro":
+        objeto = Libro.objects.get(autor=field1, titulo=field2)
+    elif product_type == "bici":
+        objeto = Bici.objects.get(marca=field1, modelo=field2)
+
+    if objeto.cantidad >= 1:
+        objeto.cantidad -= 1
+        objeto.save()
+        nuevo_objeto = Carrito.objects.create(tipo_producto=product_type, campo1=field1, campo2=field2)
+        list_carrito = Carrito.objects.order_by('tipo_producto')
+        context = {'nuevo_objeto': nuevo_objeto, 'list_carrito': list_carrito}
+        return render(request, 'mi_tienda/carrito.html', context)
+    else:
+        context = {'product_data': product_data, 'product_type': bool_product_data}
+
 
 def eliminar_carrito(request, product_type, field1, field2):
     print "paso por eliminar carrito"
     #TODO
     Carrito.objects.filter(tipo_producto=product_type, campo1=field1, campo2=field2).delete()
     list_carrito = Carrito.objects.order_by('tipo_producto')
+
+    if product_type == "disco":
+        objeto = Disco.objects.get(autor=field1, titulo=field2)
+    elif product_type == "libro":
+        objeto = Libro.objects.get(autor=field1, titulo=field2)
+    elif product_type == "bici":
+        objeto = Bici.objects.get(marca=field1, modelo=field2)
+
+    objeto.cantidad += 1
+    objeto.save()
     context = {'list_carrito': list_carrito}
     return render(request, 'mi_tienda/carrito.html', context)

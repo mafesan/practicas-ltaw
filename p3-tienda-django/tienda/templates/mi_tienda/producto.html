@@ -100,11 +100,15 @@
 </nav>
 {% load staticfiles %}
     <div>
-      {% if product_type.is_disco %}
+      {% if product_type == "discos" %}
         {% if product_data %}
-        <form method="get" action="/comprar/disco/{{ product_data.autor }}/{{ product_data.titulo }}/">
-            <button type="submit">Añadir al carro</button>
-        </form>
+        {% if product_data.cantidad >= 1 %}
+          <form method="get" action="/comprar/disco/{{ product_data.autor }}/{{ product_data.titulo }}/">
+              <button type="submit">Añadir al carro</button>
+          </form>
+          {% else %}
+            <p>Agotado temporalmente</p>
+          {% endif %}
           <span><img src="{% static product_data.imagen %}" width="300" height="300"></img></span><br>
         <span>
           <ul>
@@ -114,6 +118,7 @@
               <li>Fecha de lanzamiento: {{ product_data.fecha_pub }}</li>
               <li>Genero: {{ product_data.genero }}</li>
               <li>Discografica: {{ product_data.discografica }}</li>
+              <li>Cantidad: {{ product_data.cantidad }}</li>
           </ul>
         </span>
         {% else %}
@@ -121,7 +126,7 @@
         {% endif %}
       {% endif %}
 
-      {% if product_type.is_libro %}
+      {% if product_type == "libros" %}
       <style>
       .header-footer {
       padding: 1em;
@@ -132,9 +137,13 @@
       }
       </style>
         {% if product_data %}
-        <form method="get" action="/comprar/libro/{{ product_data.autor }}/{{ product_data.titulo }}/">
-            <button type="submit">Añadir al carro</button>
-        </form>
+        {% if product_data.cantidad >= 1 %}
+          <form method="get" action="/comprar/libro/{{ product_data.autor }}/{{ product_data.titulo }}/">
+              <button type="submit">Añadir al carro</button>
+          </form>
+        {% else %}
+          <p>Agotado temporalmente</p>
+        {% endif %}
           <br>
           <img src="{% static product_data.imagen %}" width="200" height="300">
           <ul>
@@ -144,6 +153,7 @@
               <li>Fecha de lanzamiento: {{ product_data.fecha_pub }}</li>
               <li>Genero: {{ product_data.genero }}</li>
               <li>Editorial: {{ product_data.editorial }}</li>
+              <li>Cantidad: {{ product_data.cantidad }}</li>
           </ul>
         {% else %}
             <p>Ups! Libro no encontrado :(</p>
@@ -151,7 +161,7 @@
       {% endif %}
 
 
-      {% if product_type.is_bici %}
+      {% if product_type == "bicis" %}
       <style>
       .header-footer {
       padding: 1em;
@@ -162,9 +172,13 @@
       }
       </style>
         {% if product_data %}
-        <form method="get" action="/comprar/bici/{{ product_data.marca }}/{{ product_data.modelo }}/">
-            <button type="submit">Añadir al carro</button>
-        </form><br>
+          {% if product_data.cantidad >= 1 %}
+            <form method="get" action="/comprar/bici/{{ product_data.marca }}/{{ product_data.modelo }}/">
+                <button type="submit">Añadir al carro</button>
+            </form><br>
+          {% else %}
+            <p>Agotado temporalmente</p>
+          {% endif %}
           <img src="{% static product_data.imagen %}" width="400" height="300">
           <ul>
               <li>Modelo: {{ product_data.modelo }}</li>
@@ -173,6 +187,7 @@
               <li>Color: {{ product_data.color }}</li>
               <li>Pulgadas: {{ product_data.pulgadas_rueda}}</li>
               <li>Descripción: <br> {{ product_data.descripcion }}</li>
+              <li>Cantidad: {{ product_data.cantidad }}</li>
           </ul>
         {% else %}
             <p>Ups! Bici no encontrada :(</p>
