@@ -5,8 +5,13 @@
     <h1 align="center">Red Hot Chili Shoppers</h1>
 {% endblock %}
 {% block content %}
+
     <div>
+    <section align="center">
+      <h1> ... me lo robaron :(</h1>
+      <img src="{% static "img/travolta.gif" %}" width="300" height="300"></img>
       {% if list_carrito %}
+      <h3> Es broma, aquí lo tienes: </h3>
         <form method="post" action="/pedido/">
             <button type="submit">Hacer Pedido</button>
         </form>
@@ -21,14 +26,7 @@
         {% endfor %}
         </ul>
       {% else %}
-        <h3> No hay nada en el carrito </h3>
+        <h3> Es broma, no hay nada en el carrito </h3>
       {% endif %}
     </div>
-    <div>
-    <section align="center">
-      <h1> ... me lo robaron :(</h1>
-      <img src="{% static "img/travolta.gif" %}" width="300" height="300"></img>
-      <h2> Vuelve más tarde, estamos trabajando en ello!</h2>
-      <h3><a href="/tienda"> Back to home </a></h3>
-    </div>  
 {% endblock %}

@@ -1,13 +1,19 @@
-<!DOCTYPE html>
-<html lang="es-es">
-
-<head>
-    <title> RHCS - enjoy the music!</title>
-    <meta charset="UTF-8">
-    <meta name="description" content="Index">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Miguel Angel Fernandez">
-
+{% extends "mi_tienda/index.html" %}
+{% load static %}
+{% load staticfiles %}
+{% block headerstyle %}
+.header-footer {
+padding: 1em;
+color: white;
+background-color: blue;
+clear: left;
+text-align: center;
+}
+{% endblock %}
+{% block header %}
+    <h1 align="center">Red Hot Chili Shoppers</h1>
+{% endblock %}
+{% block content %}
     <style>
     .header-footer {
     padding: 1em;
@@ -16,89 +22,7 @@
     clear: left;
     text-align: center;
     }
-    ul {
-      list-style-type: none;
-      padding: 0;
-      border: 1px solid #ddd;
-    }
-
-    ul li {
-        padding: 8px 16px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    ul li:last-child {
-        border-bottom: none
-    }
-    body {
-        background-image: url("fondo.jpg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: right top;
-        background-attachment: fixed;
-        font-family: helvetica;
-    }
-    .nav ul {
-        border: 7px solid gray;
-        border-radius: 10px;
-        list-style-type: none;
-        margin: 0;
-        margin-left:20px;
-        padding: 0;
-        overflow: hidden;
-        background-color: #333;
-    }
-
-    .nav li {
-        float: left;
-    }
-
-    .nav li a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-
-    div {
-        border: 10px solid black;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 25px;
-        box-shadow: 10px 10px 5px #777777;
-    }
-    #img01 {
-        width:100px;
-        height:100px;
-        padding-right: 15px;
-    }
-    #tabla02 {
-        width:70%;
-        text-align: left;
-    }
-    #apt-list {
-        align: center;
-    }
     </style>
-</head>
-
-<body>
-    <div class="header-footer">
-    <header id="my_header">
-    <h1 align="center">Red Hot Chili Shoppers</h1>
-    </header>
-    </div>
-    <nav class="nav">
-      <ul>
-    <li><a href="/tienda/">Ver todo</a></li>
-    <li><a href="/tienda/discos">Discos</a></li>
-    <li><a href="/tienda/libros">Libros</a></li>
-    <li><a href="/tienda/bicis">Bicis</a></li>
-    <li><a href="/tienda/carrito">Mi Carro</a></li>
-  </ul>
-</nav>
-{% load staticfiles %}
     <div>
       {% if product_type == "discos" %}
         {% if product_data %}
@@ -193,12 +117,5 @@
             <p>Ups! Bici no encontrada :(</p>
         {% endif %}
       {% endif %}
-
     </div>
-    <div class="header-footer">
-    <footer>
-        &copy; Miguel Ángel F.S., 2017
-    </footer>
-    </div>
-</body>
-</html>
+{% endblock %}

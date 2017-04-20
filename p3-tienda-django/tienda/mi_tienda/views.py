@@ -3,12 +3,18 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from django.template import loader
+from .forms import SignUpForm
 
 from .models import Disco, Libro, Bici, Carrito
 
 list_carrito = ()
 def index(request):
-    context = {}
+    if request.method == "POST":
+        print request.POST
+        context = {"form_result": request.POST}
+    else:
+        form = SignUpForm()
+        context = {"form": form}
     return render(request, 'mi_tienda/index.html', context)
 
 
@@ -62,6 +68,7 @@ def carrito(request):
     return render(request, 'mi_tienda/carrito.html', context)
 
 def llenar_carrito(request, product_type, field1, field2):
+
     print "paso por llenar carrito"
     if product_type == "disco":
         objeto = Disco.objects.get(autor=field1, titulo=field2)
