@@ -7,34 +7,49 @@
 {% endblock %}
 
 {% block content %}
-    {% if latest_music_list %}
-        {% for disco in latest_music_list %}
+    {% block search %}
+    <div>
+      <form method="POST" action="">{% csrf_token %}
+        {{ form }}
+        <input type='submit' value='Buscar'/>
+      </form>
+    {% if form_result %}
+      Mostrando resultados para: {{ form_result }}
+    {% endif %}
+    </div>
+    {% endblock %}
+    {% if music_list %}
+        {% for disco in music_list %}
             <div class="gallery">
             <a href="/tienda/product/discos/{{ disco.autor }}/{{ disco.titulo }}"><img src="{% static disco.imagen %}" width="100" height="100"><br>{{ disco.titulo }} - {{ disco.autor}}</a></li>
             </div>
         {% endfor %}
     {% else %}
-        <p>No hay discos.</p>
+            <div class="gallery">
+            No se han encontrado bicis
+            </div>
     {% endif %}
-    {% if latest_book_list %}
-        {% for libro in latest_book_list %}
+    {% if book_list %}
+        {% for libro in book_list %}
             <div class="gallery">
             <a href="/tienda/product/libros/{{ libro.autor }}/{{ libro.titulo }}"><img src="{% static libro.imagen %}" width="100" height="100"></img><br>{{ libro.titulo }} - {{ libro.autor}}</a></li>
             </div>
         {% endfor %}
         </ul>
     {% else %}
-        <p>No hay libros.</p>
+            <div class="gallery">
+            No se han encontrado libros
+            </div>
     {% endif %}
-    {% if latest_bici_list %}
-        {% for bici in latest_bici_list %}
+    {% if bici_list %}
+        {% for bici in bici_list %}
             <div class="gallery">
             <a href="/tienda/product/bicis/{{ bici.marca }}/{{ bici.modelo }}"><img src="{% static bici.imagen %}" width="1000" height="100"></img><br>{{ bici.modelo }} de {{ bici.marca }}</a></li>
             </div>
         {% endfor %}
     {% else %}
             <div class="gallery">
-            No hay bicis
+            No se han encontrado bicis
             </div>
     {% endif %}
 {% endblock %}

@@ -14,18 +14,6 @@
     <h1 align="center">Red Hot Chili Shoppers - Dive into wisdom!</h1>
 {% endblock %}
 {% block content %}
-    <div>
-    <form method="post  ">
-     ¿Estas buscando por...?:
-    <select name="search">
-     <option value="titulo" checked> Titulo</option>
-     <option value="autor"> Autor</option>
-     <option value="editorial"> Editorial</option>
-    </select>
-      <input type="search" name="data">
-      <input type="submit" value="Buscar">
-    </form>
-  </div>
     {% if latest_book_list %}
         {% for libro in latest_book_list %}
             <div class="gallery">

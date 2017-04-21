@@ -3,28 +3,42 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from django.template import loader
-from .forms import SignUpForm
+from .forms import SignUpForm, SearchForm
 
 from .models import Disco, Libro, Bici, Carrito
 
 list_carrito = ()
+    
 def index(request):
-    if request.method == "POST":
-        print request.POST
-        context = {"form_result": request.POST}
-    else:
-        form = SignUpForm()
-        context = {"form": form}
-    return render(request, 'mi_tienda/index.html', context)
+        context = {}
+        return render(request, 'mi_tienda/index.html', context)
 
 
 def ver_todo(request):
     print "paso por ver todo"
-    latest_music_list = Disco.objects.order_by('titulo')
-    latest_book_list = Libro.objects.order_by('titulo')
-    latest_bici_list = Bici.objects.order_by('marca')
-    context = {'latest_music_list': latest_music_list, 'latest_book_list': latest_book_list, 'latest_bici_list': latest_bici_list}
-    return render(request, 'mi_tienda/ver-todo.html', context)
+    form = SearchForm()
+    search = {}
+    if request.method == "POST":
+        print request.POST
+        search = request.POST["search_text"]
+        music_autor = Disco.objects.filter(autor__icontains=search)
+        music_titulo = Disco.objects.filter(titulo__icontains=search)
+        music_list = (music_autor | music_titulo).distinct()
+
+        book_autor = Libro.objects.filter(autor__icontains=search)
+        book_titulo = Libro.objects.filter(titulo__icontains=search)
+        book_list = (book_autor | book_titulo).distinct()
+
+        bici_marca = Bici.objects.filter(marca__icontains=search)
+        bici_modelo = Bici.objects.filter(modelo__icontains=search)
+        bici_list = (bici_marca | bici_modelo).distinct()
+    else:
+        music_list = Disco.objects.order_by('titulo')
+        book_list = Libro.objects.order_by('titulo')
+        bici_list = Bici.objects.order_by('marca')
+
+    context = {'music_list': music_list, 'book_list': book_list, 'bici_list': bici_list, 'form': form, 'form_result': search}
+    return render(request, 'mi_tienda/index-todo.html', context)
 
 def product_detail(request, product_type, field1, field2):
     print "paso por product_detail"
