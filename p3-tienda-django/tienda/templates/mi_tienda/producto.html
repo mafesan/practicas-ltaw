@@ -23,7 +23,7 @@ text-align: center;
     text-align: center;
     }
     </style>
-    <div>
+    <div class="product">
       {% if product_type == "discos" %}
         {% if product_data %}
         {% if product_data.cantidad >= 1 %}
@@ -33,8 +33,10 @@ text-align: center;
           {% else %}
             <p>Agotado temporalmente</p>
           {% endif %}
-          <span><img src="{% static product_data.imagen %}" width="300" height="300"></img></span><br>
-        <span>
+          <div class="subproduct">
+          <img src="{% static product_data.imagen %}" width="300" height="300"></img><br>
+        </div>
+          <div class="subproduct">
           <ul>
               <li>Titulo: {{ product_data.titulo }}</li>
               <li>Interprete: {{ product_data.autor }}</li>
@@ -44,7 +46,7 @@ text-align: center;
               <li>Discografica: {{ product_data.discografica }}</li>
               <li>Cantidad: {{ product_data.cantidad }}</li>
           </ul>
-        </span>
+        </div>
         {% else %}
             <p>Ups! Disco no encontrado :(</p>
         {% endif %}
@@ -69,7 +71,10 @@ text-align: center;
           <p>Agotado temporalmente</p>
         {% endif %}
           <br>
+          <div class="subproduct">
           <img src="{% static product_data.imagen %}" width="200" height="300">
+        </div>
+        <div class="subproduct">
           <ul>
               <li>Titulo: {{ product_data.titulo }}</li>
               <li>Interprete: {{ product_data.autor }}</li>
@@ -79,6 +84,7 @@ text-align: center;
               <li>Editorial: {{ product_data.editorial }}</li>
               <li>Cantidad: {{ product_data.cantidad }}</li>
           </ul>
+        </div>
         {% else %}
             <p>Ups! Libro no encontrado :(</p>
         {% endif %}
@@ -103,7 +109,10 @@ text-align: center;
           {% else %}
             <p>Agotado temporalmente</p>
           {% endif %}
-          <img src="{% static product_data.imagen %}" width="400" height="300">
+          <div class="subproduct">
+          <img src="{% static product_data.imagen %}" width="300" height="200">
+        </div>
+        <div class="subproduct">
           <ul>
               <li>Modelo: {{ product_data.modelo }}</li>
               <li>Marca: {{ product_data.marca }}</li>
@@ -113,9 +122,11 @@ text-align: center;
               <li>Descripción: <br> {{ product_data.descripcion }}</li>
               <li>Cantidad: {{ product_data.cantidad }}</li>
           </ul>
+        </div>
         {% else %}
             <p>Ups! Bici no encontrada :(</p>
         {% endif %}
       {% endif %}
+    </div>
     </div>
 {% endblock %}
