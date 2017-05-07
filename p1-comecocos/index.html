@@ -81,6 +81,15 @@
     var red_ghost_img = new Image();
     var white_dot_img = new Image();
 
+    var myChar1_img = new Image();
+    var myChar2_img = new Image();
+    var myChar3_img = new Image();
+    myChar1_img.src = 'images/pacman.png';
+    myChar2_img.src = 'images/pika-pacman.png';
+    myChar3_img.src = 'images/link.png';
+    myChar1_img.onclick = function(){
+      console.log("me ha pulsado!");
+    }
 
     var myScore;
     var myScoreText;
@@ -94,6 +103,7 @@
     var myTexts = [];
     var myChoice;
     var eatenDots;
+    var gameStarted;
 
     var maxDots = 48;
 
@@ -114,6 +124,7 @@
         window.addEventListener('keyup', function (e) {
             myGameArea.key = false;
         })
+        this.canvas.addEventListener('onclick', function() { }, false);
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -185,120 +196,59 @@
 
     function prestartGame(){
       myBeginningMusic = new sound("sounds/pacman_beginning.wav");
-      myBeginningMusic.play();
+      //myBeginningMusic.play();
       document.getElementById("sound-start").style.display='none';
       document.getElementById("sound-stop").style.display='none';
       document.getElementById("restart").style.display='none';
+      document.getElementById("start").style.display='none';
       document.getElementById("myCanvas").style.display='none';
+
+      myObstacles = [];
+      myDots = [];
+      myTexts  = [];
+      eatenDots = 0;
+      myGameArea.start();
+      gameStarted = false;
+
+      myScoreText = new component("22px", "Verdana", 675, 30, 0, 0, "yellow",'text');// FIXME
+      myTexts.push(myScoreText);
+      myScore = 0;
+
+      myLivesText = new component("22px", "Verdana", 675, 90, 0, 0, "yellow", 'text');
+      myTexts.push(myLivesText);
+
+      document.getElementById("start").style.display='block';
+
+
     }
 
     function startGame() {
 
         document.getElementById("restart").style.display='none';
         document.getElementById("start").style.display='none';
-        document.getElementById("charsel").style.display='none';
-        myObstacles = [];
-        myDots = [];
-        myTexts  = [];
-        eatenDots = 0;
-        myGameArea.start();
 
-
-        myScoreText = new component("22px", "Verdana", 675, 30, 0, 0, "yellow",'text');// FIXME
-        myTexts.push(myScoreText);
-        myScore = -10;
-
-        myLivesText = new component("22px", "Verdana", 675, 90, 0, 0, "yellow", 'text');
-        myTexts.push(myLivesText);
-
+        gameStarted = true;
         mySirenSound = new sound("sounds/pacman_siren_cut.wav");
         myWakaSound = new sound("sounds/pacman_waka.wav");
         myDeathSound = new sound("sounds/pacman_death.wav");
 
+        // Default values
+        myGameArea.main_character == "pacman";
+        pacman_img.src = 'images/pacman.png';
+        blue_ghost_img.src = 'images/blue-ghost.png';
+        orange_ghost_img.src = 'images/orange-ghost.png';
+        red_ghost_img.src = 'images/red-ghost.png';
+        white_dot_img.src = 'images/whitedot.png';
+        myBackgroundMusic = new sound("sounds/dp-atw.mp3");
 
-        if (myChoice == "drag1"){
-            myGameArea.main_character == "pacman";
-            pacman_img.src = 'images/pacman.png';
-            blue_ghost_img.src = 'images/blue-ghost.png';
-            orange_ghost_img.src = 'images/orange-ghost.png';
-            red_ghost_img.src = 'images/red-ghost.png';
-            white_dot_img.src = 'images/whitedot.png';
-            myBackgroundMusic = new sound("sounds/dp-atw.mp3");
-        } else if (myChoice == "drag2") {
-            myGameArea.main_character == "pikachu";
-            pacman_img.src = 'images/pika-pacman.png';
-            blue_ghost_img.src = 'images/gengar.png';
-            orange_ghost_img.src = 'images/poke-skull.png';
-            red_ghost_img.src = 'images/haunter.png';
-            white_dot_img.src = 'images/pokeball.png';
-            myBackgroundMusic = new sound("sounds/pokemon.ogg");
-        } else if (myChoice == "drag3") {
-          myGameArea.main_character == "link";
-          pacman_img.src = 'images/link.png';
-          blue_ghost_img.src = 'images/skull.png';
-          orange_ghost_img.src = 'images/skull.png';
-          red_ghost_img.src = 'images/skull.png';
-          white_dot_img.src = 'images/rupee.png';
-          myBackgroundMusic = new sound("sounds/zelda.ogg");
-        } else {
-          alert("Selecciona personaje!");
-          location.reload();
-          //myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
-        }
-
+        // Dibujo personajes en el escenario
         myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
-
         myBlueGhost = new component(45, 45, 30, 210, 2, 0, blue_ghost_img,'char');
         myOrangeGhost = new component(45, 45, 210, 270, 0, 2, orange_ghost_img, 'char');
         myRedGhost = new component(45, 45, 450, 390, 0, -1, red_ghost_img, 'char');
 
-        //Antes: velocidades 2,0 ; 0,2 ; 2,0
-        //Dibujo escenario
-        myObstacles.push(new component(2, 660, 660, 0, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(2, 660, 0, 0, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(660, 2, 0, 0, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(660, 2, 0, 658, 0, 0, 'blue', 'rect'));
-
-
-        myObstacles.push(new component(60, 60, 300, 0, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 120, 60, 60, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 120, 180, 60, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 60, 240, 120, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 60, 360, 120, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 120, 420, 60, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 120, 540, 60, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 120, 0, 240, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(120, 60, 60, 240, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(180, 60, 240, 240, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 60, 240, 300, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 60, 360, 300, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(120, 60, 480, 240, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 120, 600, 240, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 60, 60, 420, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 120, 120, 360, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 120, 480, 360, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 60, 540, 420, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(180, 60, 240, 420, 0, 0, 'blue', 'rect'));
-        myObstacles.push(new component(60, 120, 300, 480, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 60, 60, 540, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 120, 180, 540, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 120, 420, 540, 0, 0, 'blue', 'rect'));
-
-        myObstacles.push(new component(60, 60, 540, 540, 0, 0, 'blue', 'rect'));
-
-
+        // Dibujo escenario
+        drawScenario();
 
         for (i = 30; i <= 660; i += 60) {
           for (j = 30; j <= 660; j += 60) {
@@ -328,6 +278,7 @@
             }
         }else if (this.type == "text") {
             this.update = function() {
+              ctx = myGameArea.context;
               ctx.font = this.width + " " + this.height;
               ctx.fillStyle = image;  // debería ser color
               ctx.fillText(this.text, this.x, this.y);
@@ -411,27 +362,29 @@
     }
 
     function updateGameArea() {
-        if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost) || myPacman.crashWith(myRedGhost)) {
-            myLives -= 1;
-            lightRestartGame(myLives, myScore, myDots);
-        }
+        if (!gameStarted) {
+          myGameArea.stop();
+          myGameArea.clear();
+          ctx = myGameArea.context;
 
-        if (myLives == 0){
-            myBackgroundMusic.stop();
-            document.getElementById("sound-stop").style.display='none';
-            myGameArea.stop();
-            myGameArea.clear();
+          myScoreText.text="SCORE: " + String(myScore);
+          myLivesText.text="Lives: " + String(myLives);
 
-            cur_ctx = myGameArea.context;
-            cur_ctx.fillStyle = "red";
-            cur_ctx.textAlign = "center";
-            cur_ctx.font = "60px Verdana";
-            cur_ctx.fillText("Game Over", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
-            cur_ctx.drawImage(homerdoh_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
-            document.getElementById("sound-start").style.display='none';
-            document.getElementById("restart").style.display='block';
+          for (i = 0; i < myTexts.length; i += 1) {
+            myTexts[i].update();
+          }
 
-          } else if (eatenDots == maxDots){
+          ctx.drawImage(myChar1_img, 710, 200, 60, 60);
+          ctx.drawImage(myChar2_img, 710, 300, 60, 60);
+          ctx.drawImage(myChar3_img, 710, 400, 60, 60);
+
+        } else {
+          if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost) || myPacman.crashWith(myRedGhost)) {
+              myLives -= 1;
+              lightRestartGame(myLives, myScore, myDots);
+          }
+
+          if (myLives == 0){
               myBackgroundMusic.stop();
               document.getElementById("sound-stop").style.display='none';
               myGameArea.stop();
@@ -441,95 +394,113 @@
               cur_ctx.fillStyle = "red";
               cur_ctx.textAlign = "center";
               cur_ctx.font = "60px Verdana";
-              cur_ctx.fillText("You Win!", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
-              cur_ctx.drawImage(homerwin_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
+              cur_ctx.fillText("Game Over", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
+              cur_ctx.drawImage(homerdoh_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
               document.getElementById("sound-start").style.display='none';
               document.getElementById("restart").style.display='block';
+
+            } else if (eatenDots == maxDots){
+                myBackgroundMusic.stop();
+                document.getElementById("sound-stop").style.display='none';
+                myGameArea.stop();
+                myGameArea.clear();
+
+                cur_ctx = myGameArea.context;
+                cur_ctx.fillStyle = "red";
+                cur_ctx.textAlign = "center";
+                cur_ctx.font = "60px Verdana";
+                cur_ctx.fillText("You Win!", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
+                cur_ctx.drawImage(homerwin_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
+                document.getElementById("sound-start").style.display='none';
+                document.getElementById("restart").style.display='block';
             } else {
+              myGameArea.clear();
 
-            myGameArea.clear();
+              myChar1.update();
+              myChar2.update();
+              myChar3.update();
 
-            lastspeedX = myPacman.speedX;
-            lastspeedY = myPacman.speedY;
+              lastspeedX = myPacman.speedX;
+              lastspeedY = myPacman.speedY;
 
-            lastspeed_redx = myRedGhost.speedX;
-            lastspeed_redy = myRedGhost.speedY;
+              lastspeed_redx = myRedGhost.speedX;
+              lastspeed_redy = myRedGhost.speedY;
 
-            lastspeed_bluex = myBlueGhost.speedX;
-            lastspeed_bluey = myBlueGhost.speedY;
+              lastspeed_bluex = myBlueGhost.speedX;
+              lastspeed_bluey = myBlueGhost.speedY;
 
-            lastspeed_orangex = myOrangeGhost.speedX;
-            lastspeed_orangey = myOrangeGhost.speedY;
+              lastspeed_orangex = myOrangeGhost.speedX;
+              lastspeed_orangey = myOrangeGhost.speedY;
 
-            stopCharacter(myPacman);
-            controlCharacter(myPacman);
+              stopCharacter(myPacman);
+              controlCharacter(myPacman);
 
-            for (i = 0; i < myObstacles.length; i += 1) {
-              if (myPacman.crashWith(myObstacles[i])) {
-                  console.log("Changing: ", lastspeedX, lastspeedY)
-                  myPacman.speedX = -lastspeedX;
-                  myPacman.speedY = -lastspeedY;
-                  console.log("crashing with object:");
-                  console.log(myObstacles[i].x, myObstacles[i].y);
-              }
-              if (myRedGhost.crashWith(myObstacles[i])){
-                  myRedGhost.speedX = -lastspeed_redx;
-                  myRedGhost.speedY = -lastspeed_redy;
-              }
-              if (myBlueGhost.crashWith(myObstacles[i])){
-                  myBlueGhost.speedX = -lastspeed_bluex;
-                  myBlueGhost.speedY = -lastspeed_bluey;
-              }
-              if (myOrangeGhost.crashWith(myObstacles[i])){
-                  myOrangeGhost.speedX = -lastspeed_orangex;
-                  myOrangeGhost.speedY = -lastspeed_orangey;
-              }
-
-            }
-
-            myPacman.newPos();
-
-            for (i = 0; i < myDots.length; i += 1) {
-              if (myPacman.crashWith(myDots[i])) {
-                if (myDots[i].width != 0){
-                  myWakaSound.play();
-                  myScore += 10;
-                  eatenDots += 1;
+              for (i = 0; i < myObstacles.length; i += 1) {
+                if (myPacman.crashWith(myObstacles[i])) {
+                    console.log("Changing: ", lastspeedX, lastspeedY)
+                    myPacman.speedX = -lastspeedX;
+                    myPacman.speedY = -lastspeedY;
+                    console.log("crashing with object:");
+                    console.log(myObstacles[i].x, myObstacles[i].y);
                 }
-                myDots[i].width = 0;
-                myDots[i].height = 0;
+                if (myRedGhost.crashWith(myObstacles[i])){
+                    myRedGhost.speedX = -lastspeed_redx;
+                    myRedGhost.speedY = -lastspeed_redy;
+                }
+                if (myBlueGhost.crashWith(myObstacles[i])){
+                    myBlueGhost.speedX = -lastspeed_bluex;
+                    myBlueGhost.speedY = -lastspeed_bluey;
+                }
+                if (myOrangeGhost.crashWith(myObstacles[i])){
+                    myOrangeGhost.speedX = -lastspeed_orangex;
+                    myOrangeGhost.speedY = -lastspeed_orangey;
+                }
+
               }
+
+              myPacman.newPos();
+
+              for (i = 0; i < myDots.length; i += 1) {
+                if (myPacman.crashWith(myDots[i])) {
+                  if (myDots[i].width != 0){
+                    myWakaSound.play();
+                    myScore += 10;
+                    eatenDots += 1;
+                  }
+                  myDots[i].width = 0;
+                  myDots[i].height = 0;
+                }
+              }
+
+              moveCharacter(myBlueGhost, 'horizontal');
+              myBlueGhost.newPos();
+
+              moveCharacter(myOrangeGhost, 'vertical');
+              myOrangeGhost.newPos();
+
+              moveCharacter(myRedGhost, 'horizontal');
+              myRedGhost.newPos();
+
+              for (i = 0; i < myDots.length; i += 1) {
+                myDots[i].update();
+              }
+
+              for (i = 0; i < myObstacles.length; i += 1) {
+                myObstacles[i].update();
+              }
+
+              myScoreText.text="SCORE: " + String(myScore);
+              myLivesText.text="Lives: " + String(myLives);
+
+              for (i = 0; i < myTexts.length; i += 1) {
+                myTexts[i].update();
+              }
+
+              myPacman.update();
+              myBlueGhost.update();
+              myOrangeGhost.update();
+              myRedGhost.update();
             }
-
-            moveCharacter(myBlueGhost, 'horizontal');
-            myBlueGhost.newPos();
-
-            moveCharacter(myOrangeGhost, 'vertical');
-            myOrangeGhost.newPos();
-
-            moveCharacter(myRedGhost, 'horizontal');
-            myRedGhost.newPos();
-
-            for (i = 0; i < myDots.length; i += 1) {
-              myDots[i].update();
-            }
-
-            for (i = 0; i < myObstacles.length; i += 1) {
-              myObstacles[i].update();
-            }
-
-            myScoreText.text="SCORE: " + String(myScore);
-            myLivesText.text="Lives: " + String(myLives);
-
-            for (i = 0; i < myTexts.length; i += 1) {
-              myTexts[i].update();
-            }
-
-            myPacman.update();
-            myBlueGhost.update();
-            myOrangeGhost.update();
-            myRedGhost.update();
-
         }
     }
 
@@ -549,17 +520,54 @@
       document.getElementById("sound-start").style.display='none';
     }
 
+    function drawScenario(){
+      // Dibujo limites del escenario
+      myObstacles.push(new component(2, 660, 660, 0, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(2, 660, 0, 0, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(660, 2, 0, 0, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(660, 2, 0, 658, 0, 0, 'blue', 'rect'));
+
+      //Dibujo escenario
+      myObstacles.push(new component(60, 60, 300, 0, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 120, 60, 60, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 120, 180, 60, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 60, 240, 120, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 60, 360, 120, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 120, 420, 60, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 120, 540, 60, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 120, 0, 240, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(120, 60, 60, 240, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(180, 60, 240, 240, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 60, 240, 300, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 60, 360, 300, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(120, 60, 480, 240, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 120, 600, 240, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 60, 60, 420, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 120, 120, 360, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 120, 480, 360, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 60, 540, 420, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(180, 60, 240, 420, 0, 0, 'blue', 'rect'));
+      myObstacles.push(new component(60, 120, 300, 480, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 60, 60, 540, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 120, 180, 540, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 120, 420, 540, 0, 0, 'blue', 'rect'));
+
+      myObstacles.push(new component(60, 60, 540, 540, 0, 0, 'blue', 'rect'));
+    }
 
     </script>
-  </div>
-  <div id="charsel">
-  <center>
-  <div id="draganddrop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-  <br>
-  <div style="background-color:black;width:600px;">
-  <img id="drag1" src="images/pacman.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
-  <img id="drag2" src="images/pika-pacman.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
-  <img id="drag3" src="images/link.png" draggable="true" ondragstart="drag(event)" width="150" height="150">
   </div>
 </center>
   </div>
