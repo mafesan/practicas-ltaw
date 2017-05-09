@@ -120,12 +120,14 @@
     var myRedGhost;
     var myObstacles = [];
     var myDots = [];
-    var myLives = 1;
+    var myLives = 3;
     var myTexts = [];
     var myChoice;
     var eatenDots;
+    var gameSeconds = 150;
 
-    var maxDots = 48;
+    var hiddenDots = 42;
+    var maxDots = (121-hiddenDots)+1;
 
     var myGameArea = {
     canvas : document.getElementById("myCanvas"),
@@ -156,6 +158,10 @@
     function everyinterval(n) {
         if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
         return false;
+    }
+
+    function minus_second() {
+      gameSeconds -= 1;
     }
 
     function sound(src) {
@@ -198,6 +204,9 @@
         myGameArea.clear();
         myLives = 3;
         myScore = -10;
+        clearInterval(gameInterval);
+        gameSeconds = 150;
+
         startGame();
     }
 
@@ -244,7 +253,7 @@
         myTexts  = [];
         eatenDots = 0;
         myGameArea.start();
-
+        gameInterval = setInterval(minus_second, 1000);
 
         myScoreText = new component("22px", "Verdana", 675, 30, 0, 0, "yellow",'text');// FIXME
         myTexts.push(myScoreText);
@@ -252,6 +261,9 @@
 
         myLivesText = new component("22px", "Verdana", 675, 90, 0, 0, "yellow", 'text');
         myTexts.push(myLivesText);
+
+        myTimeText = new component("22px", "Verdana", 675, 600, 0, 0, "yellow", 'text');
+        myTexts.push(myTimeText);
 
         mySirenSound = new sound("sounds/pacman_siren_cut.wav");
         myWakaSound = new sound("sounds/pacman_waka.wav");
@@ -347,6 +359,7 @@
             myDots.push(new component(15, 15, i, j, 0, 0, white_dot_img, 'dot'));
           }
         }
+        console.log(myDots.length)
 
         document.getElementById("sound-start").style.display='none';
         document.getElementById("sound-stop").style.display='block';
@@ -423,10 +436,10 @@
     function controlCharacter(character){
         // Imprimir posicion de teclado
         this.character = character;
-        if (myGameArea.key && myGameArea.key == 37) {this.character.speedX = -3; this.character.speedY = 0; this.character.angle = Math.PI;}
-        if (myGameArea.key && myGameArea.key == 39) {this.character.speedX = 3; this.character.speedY = 0; this.character.angle = 0; }
-        if (myGameArea.key && myGameArea.key == 38) {this.character.speedY = -3; this.character.speedX = 0; this.character.angle = -Math.PI/2;}
-        if (myGameArea.key && myGameArea.key == 40) {this.character.speedY = 3; this.character.speedX = 0; this.character.angle = Math.PI/2;}
+        if (myGameArea.key && myGameArea.key == 37) {this.character.speedX = -5; this.character.speedY = 0; this.character.angle = Math.PI;}
+        if (myGameArea.key && myGameArea.key == 39) {this.character.speedX = 5; this.character.speedY = 0; this.character.angle = 0; }
+        if (myGameArea.key && myGameArea.key == 38) {this.character.speedY = -5; this.character.speedX = 0; this.character.angle = -Math.PI/2;}
+        if (myGameArea.key && myGameArea.key == 40) {this.character.speedY = 5; this.character.speedX = 0; this.character.angle = Math.PI/2;}
         if (this.character.speedX != 0 || this.character.speedY != 0) {
           mySirenSound.play();
         }
@@ -453,16 +466,14 @@
     }
 
     function updateGameArea() {
-      console.log("eatenDots: ");
-      console.log(eatenDots);
-      console.log("maxDots: ");
-      console.log(maxDots);
         if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost) || myPacman.crashWith(myRedGhost)) {
             myLives -= 1;
+            clearInterval(gameInterval);
             lightRestartGame(myLives, myScore, myDots);
+
         }
 
-        if (myLives == 0){
+        if ((myLives == 0) || (gameSeconds == 0)){
             myBackgroundMusic.stop();
             document.getElementById("sound-stop").style.display='none';
             myGameArea.stop();
@@ -480,6 +491,7 @@
               document.getElementById("sound-stop").style.display='none';
               myGameArea.stop();
               myGameArea.clear();
+              console.log(gameSeconds);
               myVideoWin.play();
               document.getElementById("myCanvas").style.display='none';
               document.getElementById("div-video-win").style.display='block';
@@ -565,6 +577,7 @@
 
             myScoreText.text="SCORE: " + String(myScore);
             myLivesText.text="Lives: " + String(myLives);
+            myTimeText.text="Time: " + String(gameSeconds);
 
             for (i = 0; i < myTexts.length; i += 1) {
               myTexts[i].update();
