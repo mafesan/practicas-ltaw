@@ -32,6 +32,17 @@
       padding: 3em;
       align: center;
     }
+    .video {
+      padding: 3em;
+      align: center;
+    }
+    video{
+      border:1px solid blue;
+      background-color: black;
+      margin: 0 auto;
+      display: block;
+
+    }
     body {
         background-image:url(images/Pacman-Ghosts-Fever-4K-UHD-Wallpaper.jpg);
         font-family: helvetica;
@@ -65,10 +76,21 @@
     </style>
 </head>
 <body onload="prestartGame();">
+  <div id='div-video-win' class="video">
+    <video id="myVideo-win" width="720" height="480">
+    <source src="videos/slow-clap-edit.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div id='div-video-lose' class="video">
+    <video id="myVideo-lose" width="720" height="480">
+    <source src="videos/game-over.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="canvas-space">
   <center>
     <canvas id="myCanvas"></canvas>
     <script>
+
 
     var homerdoh_img = new Image();
     homerdoh_img.src = 'images/homersimpsondoh.png';
@@ -81,6 +103,14 @@
     var red_ghost_img = new Image();
     var white_dot_img = new Image();
 
+    var myChar1_img = new Image();
+    var myChar2_img = new Image();
+    var myChar3_img = new Image();
+    myChar1_img.src = 'images/pacman.png';
+    myChar2_img.src = 'images/pika-pacman.png';
+    myChar3_img.src = 'images/link.png';
+    var myVideoLose = document.getElementById("myVideo-lose");
+    var myVideoWin = document.getElementById("myVideo-win");
 
     var myScore;
     var myScoreText;
@@ -90,7 +120,7 @@
     var myRedGhost;
     var myObstacles = [];
     var myDots = [];
-    var myLives = 3;
+    var myLives = 1;
     var myTexts = [];
     var myChoice;
     var eatenDots;
@@ -183,12 +213,22 @@
         }, 1000);
     }
 
+    function playPause(video) {
+    if (video.paused)
+        video.play();
+    else
+        video.pause();
+    }
+
+
     function prestartGame(){
       myBeginningMusic = new sound("sounds/pacman_beginning.wav");
-      myBeginningMusic.play();
+      //myBeginningMusic.play();
       document.getElementById("sound-start").style.display='none';
       document.getElementById("sound-stop").style.display='none';
       document.getElementById("restart").style.display='none';
+      document.getElementById("div-video-win").style.display='none';
+      document.getElementById("div-video-lose").style.display='none';
       document.getElementById("myCanvas").style.display='none';
     }
 
@@ -197,6 +237,8 @@
         document.getElementById("restart").style.display='none';
         document.getElementById("start").style.display='none';
         document.getElementById("charsel").style.display='none';
+        document.getElementById("div-video-win").style.display='none';
+        document.getElementById("div-video-lose").style.display='none';
         myObstacles = [];
         myDots = [];
         myTexts  = [];
@@ -411,6 +453,10 @@
     }
 
     function updateGameArea() {
+      console.log("eatenDots: ");
+      console.log(eatenDots);
+      console.log("maxDots: ");
+      console.log(maxDots);
         if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost) || myPacman.crashWith(myRedGhost)) {
             myLives -= 1;
             lightRestartGame(myLives, myScore, myDots);
@@ -422,33 +468,32 @@
             myGameArea.stop();
             myGameArea.clear();
 
-            cur_ctx = myGameArea.context;
-            cur_ctx.fillStyle = "red";
-            cur_ctx.textAlign = "center";
-            cur_ctx.font = "60px Verdana";
-            cur_ctx.fillText("Game Over", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
-            cur_ctx.drawImage(homerdoh_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
+            document.getElementById("myCanvas").style.display='none';
+            document.getElementById("div-video-lose").style.display='block';
+            myVideoLose.play();
             document.getElementById("sound-start").style.display='none';
             document.getElementById("restart").style.display='block';
 
           } else if (eatenDots == maxDots){
+
               myBackgroundMusic.stop();
               document.getElementById("sound-stop").style.display='none';
               myGameArea.stop();
               myGameArea.clear();
+              myVideoWin.play();
+              document.getElementById("myCanvas").style.display='none';
+              document.getElementById("div-video-win").style.display='block';
 
-              cur_ctx = myGameArea.context;
-              cur_ctx.fillStyle = "red";
-              cur_ctx.textAlign = "center";
-              cur_ctx.font = "60px Verdana";
-              cur_ctx.fillText("You Win!", myGameArea.canvas.width/3, myGameArea.canvas.height/3);
-              cur_ctx.drawImage(homerwin_img, myGameArea.canvas.width-340, myGameArea.canvas.height-400, 340, 400);
               document.getElementById("sound-start").style.display='none';
               document.getElementById("restart").style.display='block';
             } else {
 
             myGameArea.clear();
 
+            ctx = myGameArea.context;
+            ctx.drawImage(myChar1_img, 710, 200, 60, 60);
+            ctx.drawImage(myChar2_img, 710, 300, 60, 60);
+            ctx.drawImage(myChar3_img, 710, 400, 60, 60);
             lastspeedX = myPacman.speedX;
             lastspeedY = myPacman.speedY;
 
@@ -564,7 +609,7 @@
 </center>
   </div>
     <center>
-      <button class="button" id="start" onclick="startGame(); myBackgroundMusic.play();">Start Game</button>
+      <button class="button" id="start" onclick="startGame();">Start Game</button>
       <button class="button" id="restart" onclick="restartGame();">Restart Game</button>
       <button class="button" id="sound-start" onclick="myBackgroundMusic.stop(); myBackgroundMusic.play(); hideStartButton;">Start Music</button>
       <button class="button" id="sound-stop" onclick="myBackgroundMusic.stop();">Stop Music</button>
