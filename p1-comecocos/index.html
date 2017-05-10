@@ -32,6 +32,25 @@
       padding: 3em;
       align: center;
     }
+    #score-div{
+        width: 600px;
+        height: 100px;
+        align: center;
+        margin: auto;
+    }
+    .score{
+        background-color: black;
+        text-align: left;
+        border:3px solid blue;
+        padding: 3px;
+        border-radius: 20px;
+        color: yellow;
+        text-align: center;
+        text-shadow: 3px 2px blue;
+        font-size: 2em;
+        font-family: Arial, Helvetica, sans-serif;
+        text-decoration-style: solid;
+    }
     .video {
       padding: 3em;
       align: center;
@@ -76,6 +95,9 @@
     </style>
 </head>
 <body onload="prestartGame();">
+    <div id="score-div" class="score">
+        <p> Highest score: </p>
+    </div>
   <div id='div-video-win' class="video">
     <video id="myVideo-win" width="720" height="480">
     <source src="videos/slow-clap-edit.mp4" type="video/mp4">
@@ -125,6 +147,8 @@
     var myChoice;
     var eatenDots;
     var gameSeconds = 150;
+    var topRecord = 0;
+    var highestScore = 0;
 
     var hiddenDots = 42;
     var maxDots = (121-hiddenDots)+1;
@@ -132,6 +156,8 @@
     var myGameArea = {
     canvas : document.getElementById("myCanvas"),
     start : function() {
+
+
         this.canvas.width = 660+180;
         this.canvas.height = 660;
         this.context = this.canvas.getContext("2d");
@@ -231,6 +257,21 @@
 
 
     function prestartGame(){
+        if (typeof(Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            highestScore = localStorage.getItem("hiScore");
+            console.log(highestScore);
+            if (highestScore == null){
+                document.getElementById("score-div").innerHTML = "Highest score: 0";
+                highestScore = 0;
+            } else {
+                document.getElementById("score-div").innerHTML = "Highest score: " + String(highestScore);
+            }
+
+        } else {
+            highestScore = 0;
+            document.getElementById("score-div").innerHTML = "Highest score: 0";
+        }
       myBeginningMusic = new sound("sounds/pacman_beginning.wav");
       //myBeginningMusic.play();
       document.getElementById("sound-start").style.display='none';
@@ -239,10 +280,26 @@
       document.getElementById("div-video-win").style.display='none';
       document.getElementById("div-video-lose").style.display='none';
       document.getElementById("myCanvas").style.display='none';
+
     }
 
     function startGame() {
 
+        if (typeof(Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            highestScore = localStorage.getItem("hiScore");
+            console.log(highestScore);
+            if (highestScore == null){
+                document.getElementById("score-div").innerHTML = "Highest score: 0";
+                highestScore = 0;
+            } else {
+                document.getElementById("score-div").innerHTML = "Highest score: " + String(highestScore);
+            }
+
+        } else {
+            highestScore = 0;
+            document.getElementById("score-div").innerHTML = "Highest score: 0";
+        }
         document.getElementById("restart").style.display='none';
         document.getElementById("start").style.display='none';
         document.getElementById("charsel").style.display='none';
@@ -475,6 +532,13 @@
 
         if ((myLives == 0) || (gameSeconds == 0)){
             myBackgroundMusic.stop();
+            if (myScore > highestScore){
+                highestScore = myScore;
+                if (typeof(Storage) !== "undefined") {
+                      // Code for localStorage/sessionStorage.
+                      localStorage.setItem("hiScore", myScore);
+                  }
+            }
             document.getElementById("sound-stop").style.display='none';
             myGameArea.stop();
             myGameArea.clear();
@@ -485,8 +549,15 @@
             document.getElementById("sound-start").style.display='none';
             document.getElementById("restart").style.display='block';
 
-          } else if (eatenDots == maxDots){
 
+          } else if (eatenDots == maxDots){
+              if (myScore > highestScore){
+                  highestScore = myScore;
+                  if (typeof(Storage) !== "undefined") {
+                        // Code for localStorage/sessionStorage.
+                        localStorage.setItem("hiScore", myScore);
+                    }
+              }
               myBackgroundMusic.stop();
               document.getElementById("sound-stop").style.display='none';
               myGameArea.stop();
@@ -498,6 +569,7 @@
 
               document.getElementById("sound-start").style.display='none';
               document.getElementById("restart").style.display='block';
+
             } else {
 
             myGameArea.clear();
