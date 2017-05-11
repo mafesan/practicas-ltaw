@@ -100,7 +100,7 @@ http.createServer(function(request, response){
 							response.end('Error 500. Error interno.');
 							// console.log('Error 500. Error interno.');
 						}else{
-							var extension = ruta_a_archivo.split('.').pmy_var(); //se saca la extension (html, css, js, ...) para extraer el myme tipe del dic declarado antes
+							var extension = ruta_a_archivo.split('.').pop(); //se saca la extension (html, css, js, ...) para extraer el myme tipe del dic declarado antes
 							var mime_type = mime_types[extension];
 
 							var domain ='localhost';
