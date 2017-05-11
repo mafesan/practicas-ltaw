@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <link rel="stylesheet" type="text/css" href="css/main.css">
+ 	<script src="js/ajax.js"></script>
+
+</head>
+<body>
+
+	<form action="/formulario" method="post">
+		<!-- Campo 1: -->
+		<input class="destacado" type="text" id ="op1" name="campo1" size="30" placeholder="numero1" onkeyup="showResult()">
+
+		<!-- Opcion: -->
+		<select class="destacado" placeholder="opcion"  id="op" pl name="opcion">
+			<option value="opcion1">opcion1</option>
+			<option value="opcion2">opcion2</option>
+			<option value="opcion3">opcion3</option>
+			<option value="opcion4">opcion4</option>
+		</select>
+
+		<!-- Campo 2: -->
+		<input class="destacado" type="text" id ="op2" name="campo2" size="30" placeholder="numero2" onkeyup="showResult()">
+		<input type="submit" value="Enviar">
+	</form>
+
+	<p id="resultado"></p>
+</body>
+</html>

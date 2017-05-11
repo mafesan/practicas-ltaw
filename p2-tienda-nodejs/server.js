@@ -29,9 +29,17 @@ var server = http.createServer(function(request, response) {
     console.log(extension);
     console.log(pathname);
     console.log(contentType);
-	// Si nos viene un GET, llamamos a la funcion showResponse
-	if (request.method == "GET"){
-		showResponse(pathname, contentType, request, response);
+
+    if (request.method == "GET"){
+		var check_root = pathname.split("?");
+		if (check_root.length > 1){
+			check_root = check_root[1].split("&");
+			processForm(check_root,response,"GET");
+		}else{
+			showResponse(pathname, contentType, request, response);
+		}
+	}else if(request.method == "POST"){
+		processForm(request,response,"POST");
 	}
 }).listen(8080);
 
@@ -65,4 +73,33 @@ function showResponse(pathname, contentType, request, response){
 			response.end();
 		}
 	});
+}
+
+function processForm(request, response, method){
+    var body = [];
+    var responseBody = '';
+    if (method == "GET"){
+        for (var i = 0; i < request.length; i++) {
+            field = request[i].split("=");
+            responseBody = responseBody + field[0] + ' = ' + field[1] + ' \n'
+        }
+        response.writeHead(200, 'text/plain');
+        response.end(responseBody);
+    }else{
+        request.on('error', function(err) {
+            console.error(err);
+        }).on('data', function(chunk) {
+            body.push(chunk);
+        }).on('end', function() {
+            body = Buffer.concat(body).toString();
+            var str = body.split('&');
+            for (i = 0; i < str.length; i++) {
+                var field = str[i].split('=');
+                responseBody = responseBody + field[0] + ' = ' + field[1] + ' \n'
+            }
+            response.writeHead(200, 'text/plain');
+            response.end(responseBody);
+            console.log('Se ha enviado el siguiente contenido: ' + responseBody);
+        });
+    }
 }
