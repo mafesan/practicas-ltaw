@@ -1,0 +1,95 @@
+body {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right top;
+    background-attachment: fixed;
+    font-family: Avantgarde, sans-serif;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  border: 1px solid #ddd;
+}
+
+ul li {
+    padding: 8px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+ul li:last-child {
+    border-bottom: none
+}
+{% block headerstyle %}
+.header-footer {
+padding: 1em;
+color: white;
+background-color: #D22A2A;
+clear: left;
+text-align: center;
+border: 7px solid black;
+border-radius: 10px;
+}
+{% endblock %}
+.nav ul {
+    border: 7px solid gray;
+    border-radius: 10px;
+    list-style-type: none;
+    margin: 0;
+    margin-left:20px;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.nav li {
+    float: left;
+}
+
+.nav li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+div.product {
+  border: none;
+  box-shadow: none;
+  align-self: center;
+  padding: 10px;
+  float: left;
+}
+div.subproduct{
+  border: none;
+  box-shadow: none;
+  float: left;
+}
+div.gallery {
+  margin: 25px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 180px;
+}
+
+div.gallery:hover {
+    border: 1px solid #777;
+}
+
+div.gallery img {
+    width: 100%;
+    height: auto;
+}
+
+div.desc {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+div {
+    border: 10px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 25px;
+    box-shadow: 10px 10px 5px #777777;
+    font-family: Trebuchet MS, sans-serif;
+}
