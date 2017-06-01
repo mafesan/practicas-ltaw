@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--Problema 1 examen - Miguel Angel Fernandez -->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Problema 1 examen LTAW 2017">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Miguel Angel Fernandez Sanchez">
+  <script src="ajax.js"></script>
+</head>
+<body>
+  <form action"/form" method="post">
+  <input type="text" id="operando1" placeholder="operando1" name="operando1" onkeyup="showAns()">
+  <select id="operacion" placeholder="operacion" name="opcion">
+    <option value="suma">SUMA</option>
+    <option value="resta">RESTA</option>
+    <option value="multiplicacion">MULTIPLICACION</option>
+    <option value="division">DIVISION</option>
+  </select>
+  <input type="text" id="operando2" placeholder="operando2" name="operando2" onkeyup="showAns()">
+  <input type="submit" value="Submit">
+</form>
+<img src="calculadora.jpg" width="100" height="100"></img>
+<div>
+  <p id="ans"></p>
+</div>
+</body>
+</html>

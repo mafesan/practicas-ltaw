@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<!-- Miguel Angel Fernandez Sanchez -->
+<html lang="es-es">
+<!--http://www.w3schools.com/graphics/game_intro.asp-->
+<head>
+    <title>Problema 2 examen</title>
+    <link rel="shortcut icon" href="images/blue-ghost.png"/>
+    <meta charset="UTF-8">
+    <meta name="description" content="Problema 2 examen LTAW 2017">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="author" content="Miguel Angel Fernandez Sanchez">
+    <style>
+    .header-footer {
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+    text-align: center;
+    }
+    #draganddrop {
+        width: 150px;
+        height: 150px;
+        padding: 10px;
+        border: 3px solid blue;
+        background-color: black;
+    }
+    canvas {
+        border:1px solid blue;
+        background-color: black;
+        align-self: center;
+    }
+    .canvas-space {
+      padding: 3em;
+      align: center;
+    }
+    #score-div{
+        width: 600px;
+        height: 100px;
+        align: center;
+        margin: auto;
+    }
+    .score{
+        background-color: black;
+        text-align: left;
+        border:3px solid blue;
+        padding: 3px;
+        border-radius: 20px;
+        color: yellow;
+        text-align: center;
+        text-shadow: 3px 2px blue;
+        font-size: 2em;
+        font-family: Arial, Helvetica, sans-serif;
+        text-decoration-style: solid;
+    }
+    .video {
+      padding: 3em;
+      align: center;
+    }
+    video{
+      border:1px solid blue;
+      background-color: black;
+      margin: 0 auto;
+      display: block;
+
+    }
+    body {
+        background: lightblue;
+        font-family: helvetica;
+        margin-left:20px;
+    }
+
+    .button {
+        align: center;
+        display: inline-block;
+        padding: 15px 25px;
+        font-size: 24px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #008CBA;
+        border: none;
+        border-radius: 40px;
+        box-shadow: 0 9px #999;
+        width: 600px;
+    }
+
+    .button:hover {background-color: #3e8e41}
+
+    .button:active {
+      background-color: #3e8e41;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+    </style>
+</head>
+<body onload="prestartGame();">
+    <div id="score-div" class="score">
+        <p> Highest score: </p>
+    </div>
+  <div class="canvas-space">
+  <center>
+    <canvas id="myCanvas"></canvas>
+    <script>
+
+    var blue_ghost_img = new Image();
+    var pacman_img = new Image();
+    var orange_ghost_img = new Image();
+    var red_ghost_img = new Image();
+    var white_dot_img = new Image();
+
+    var myChar1_img = new Image();
+
+    var myScore;
+    var myScoreText;
+    var myPacman;
+    var myBlueGhost;
+    var myOrangeGhost;
+    var myRedGhost;
+    var myObstacles = [];
+    var myDots = [];
+    var myLives = 3;
+    var myTexts = [];
+    var myChoice;
+    var eatenDots;
+    var gameSeconds = 60; // EL juego dura un minuto
+    var topRecord = 0;
+    var highestScore = 0;
+    var parrafo_info;
+
+    var hiddenDots = 42;
+    var maxDots = (121-hiddenDots)+1;
+
+    var myGameArea = {
+    canvas : document.getElementById("myCanvas"),
+    start : function() {
+
+
+        this.canvas.width = 660+180;
+        this.canvas.height = 660;
+        this.context = this.canvas.getContext("2d");
+        this.canvas.style.display='block';
+        this.context.font = "60px Verdana";
+        this.frameNo = 0;
+        this.interval = setInterval(updateGameArea, 20);
+        this.main_character = "pacman";
+        window.addEventListener('keydown', function (e) {
+            myGameArea.key = e.keyCode;
+        })
+        window.addEventListener('keyup', function (e) {
+            myGameArea.key = false;
+        })
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }
+    }
+
+    function everyinterval(n) {
+        if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+        return false;
+    }
+
+    function minus_second() {
+      gameSeconds -= 1;
+    }
+
+    function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+        document.getElementById("sound-start").style.display='none';
+        document.getElementById("sound-stop").style.display='block';
+
+    }
+    this.stop = function(){
+        this.sound.pause();
+        document.getElementById("sound-start").style.display='block';
+        document.getElementById("sound-stop").style.display='none';
+    }
+    }
+
+    function randomize_positon(myGhost){
+      new_x = Math.floor(Math.random() * 660);
+      new_y = Math.floor(Math.random() * 660);
+      console.log(new_x);
+      console.log(new_y);
+      myGhost.x = new_x;
+      myGhost.y = new_y;
+      return [new_x, new_y];
+
+    }
+
+    function restartGame(){
+        myGameArea.clear();
+        myLives = 3;
+        myScore = -10; // Porque el comecocos se come un punto en su posicion inicial
+        clearInterval(gameInterval);
+        gameSeconds = 60; // El juego debe durar un minuto
+
+        startGame([]);
+    }
+
+    function lightRestartGame(lives, score, dots, ghost){
+      // cuando un fantasma te come, se dibuja en una posicion aleatoria
+        myDeathSound.play();
+        new_ghost_position = randomize_positon(ghost);
+    }
+
+
+    function prestartGame(){
+        if (typeof(Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            highestScore = localStorage.getItem("hiScore");
+            console.log(highestScore);
+            if (highestScore == null){
+                document.getElementById("score-div").innerHTML = "Highest score: 0";
+                highestScore = 0;
+            } else {
+                document.getElementById("score-div").innerHTML = "Highest score: " + String(highestScore);
+            }
+
+        } else {
+            highestScore = 0;
+            document.getElementById("score-div").innerHTML = "Highest score: 0";
+        }
+      myBeginningMusic = new sound("sounds/pacman_beginning.wav");
+      myBeginningMusic.play();
+      document.getElementById("sound-start").style.display='none';
+      document.getElementById("sound-stop").style.display='none';
+      document.getElementById("restart").style.display='none';
+      document.getElementById("myCanvas").style.display='none';
+
+      update_parrafo("No ha ocurrido nada relevante");
+
+    }
+
+    function startGame(new_ghost_position) {
+
+        if (typeof(Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            highestScore = localStorage.getItem("hiScore");
+            console.log(highestScore);
+            if (highestScore == null){
+                document.getElementById("score-div").innerHTML = "Highest score: 0";
+                highestScore = 0;
+            } else {
+                document.getElementById("score-div").innerHTML = "Highest score: " + String(highestScore);
+            }
+
+        } else {
+            highestScore = 0;
+            document.getElementById("score-div").innerHTML = "Highest score: 0";
+        }
+        document.getElementById("restart").style.display='none';
+        document.getElementById("start").style.display='none';
+
+        myObstacles = [];
+        myDots = [];
+        myTexts  = [];
+        eatenDots = 0;
+        myGameArea.start();
+        gameInterval = setInterval(minus_second, 1000);
+
+        myScoreText = new component("22px", "Verdana", 675, 30, 0, 0, "yellow",'text');// FIXME
+        myTexts.push(myScoreText);
+        myScore = -10;
+
+        myLivesText = new component("22px", "Verdana", 675, 90, 0, 0, "yellow", 'text');
+        myTexts.push(myLivesText);
+
+        myTimeText = new component("22px", "Verdana", 675, 600, 0, 0, "yellow", 'text');
+        myTexts.push(myTimeText);
+
+        mySirenSound = new sound("sounds/pacman_siren_cut.wav");
+        myWakaSound = new sound("sounds/pacman_waka.wav");
+        myDeathSound = new sound("sounds/pacman_death.wav");
+
+
+        myGameArea.main_character == "pacman";
+        pacman_img.src = 'images/pacman.png';
+        blue_ghost_img.src = 'images/blue-ghost.png';
+        orange_ghost_img.src = 'images/orange-ghost.png';
+        red_ghost_img.src = 'images/red-ghost.png';
+        white_dot_img.src = 'images/whitedot.png';
+        myBackgroundMusic = new sound("sounds/dp-atw.mp3");
+
+
+        myPacman = new component(40, 40, 330, 330, 0, 0, pacman_img,'char');
+
+        if (new_ghost_position){
+
+        }
+        myBlueGhost = new component(45, 45, 30, 210, 2, 0, blue_ghost_img,'char');
+        myOrangeGhost = new component(45, 45, 210, 270, 0, 2, orange_ghost_img, 'char');
+        myRedGhost = new component(45, 45, 450, 390, 0, -1, red_ghost_img, 'char');
+
+        //Antes: velocidades 2,0 ; 0,2 ; 2,0
+        //Dibujo escenario
+        myObstacles.push(new component(2, 660, 660, 0, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(2, 660, 0, 0, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(660, 2, 0, 0, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(660, 2, 0, 658, 0, 0, 'blue', 'rect'));
+
+
+        myObstacles.push(new component(60, 60, 300, 0, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 60, 60, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 180, 60, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 240, 120, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 60, 360, 120, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 420, 60, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 540, 60, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 0, 240, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(120, 60, 60, 240, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(180, 60, 240, 240, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 240, 300, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 360, 300, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(120, 60, 480, 240, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 600, 240, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 60, 60, 420, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 120, 360, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 480, 360, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 60, 540, 420, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(180, 60, 240, 420, 0, 0, 'blue', 'rect'));
+        myObstacles.push(new component(60, 120, 300, 480, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 60, 60, 540, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 180, 540, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 120, 420, 540, 0, 0, 'blue', 'rect'));
+
+        myObstacles.push(new component(60, 60, 540, 540, 0, 0, 'blue', 'rect'));
+
+
+        // Dibujo puntos
+        for (i = 30; i <= 660; i += 60) {
+          for (j = 30; j <= 660; j += 60) {
+            myDots.push(new component(15, 15, i, j, 0, 0, white_dot_img, 'dot'));
+          }
+        }
+        bigdot1 = myDots[3];
+        myDots[3].width = 30;
+        myDots[3].height = 30;
+
+        myDots[16].width = 30;
+        myDots[16].height = 30;
+
+        myDots[52].width = 30;
+        myDots[52].height = 30;
+
+        myDots[85].width = 30;
+        myDots[85].height = 30;
+        console.log(myDots.length);
+
+        document.getElementById("sound-start").style.display='none';
+        document.getElementById("sound-stop").style.display='block';
+    }
+
+    function component(width, height, x, y, speedX, speedY, image, type) {
+        this.width = width;
+        this.height = height;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.x = x;
+        this.y = y;
+        this.angle = 0;
+        this.image = image;
+        this.type = type;
+        if (this.type == "rect"){
+            this.update = function() {
+                ctx = myGameArea.context;
+                ctx.fillStyle = image;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        }else if (this.type == "text") {
+            this.update = function() {
+              ctx.font = this.width + " " + this.height;
+              ctx.fillStyle = image;  // debería ser color
+              ctx.fillText(this.text, this.x, this.y);
+            }
+        }else{
+            this.update = function(){
+                ctx = myGameArea.context;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.drawImage(this.image, this.width/-2, this.height/-2, this.width, this.height);
+                ctx.restore();
+            }
+        }
+        this.newPos = function() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+        }
+        this.crashWith = function(otherobj) {
+
+        if (otherobj.type != 'rect'){
+            var myleft = this.x - (this.width/2);
+            var myright = this.x + (this.width/2);
+            var mytop = this.y - (this.height/2);
+            var mybottom = this.y + (this.height/2);
+            var otherleft = otherobj.x - (this.width/2);
+            var otherright = otherobj.x + (this.width/2);
+            var othertop = otherobj.y - (this.height/2);
+            var otherbottom = otherobj.y + (this.height/2);
+        } else {
+            var myleft = this.x;
+            var myright = this.x + (this.width);
+            var mytop = this.y;
+            var mybottom = this.y + (this.height);
+            var otherleft = otherobj.x + (this.width/2);
+            var otherright = otherobj.x + (otherobj.width) + (this.width/2);
+            var othertop = otherobj.y + (this.height/2);
+            var otherbottom = otherobj.y + (otherobj.height) + (this.height/2);
+        }
+        var crash = true;
+        if ((mybottom < othertop) ||
+               (mytop > otherbottom) ||
+               (myright < otherleft) ||
+               (myleft > otherright)) {
+           crash = false;
+        }
+        return crash;
+        }
+      }
+
+    function controlCharacter(character){
+        // Imprimir posicion de teclado
+        this.character = character;
+        if (myGameArea.key && myGameArea.key == 37) {this.character.speedX = -5; this.character.speedY = 0; this.character.angle = Math.PI;}
+        if (myGameArea.key && myGameArea.key == 39) {this.character.speedX = 5; this.character.speedY = 0; this.character.angle = 0; }
+        if (myGameArea.key && myGameArea.key == 38) {this.character.speedY = -5; this.character.speedX = 0; this.character.angle = -Math.PI/2;}
+        if (myGameArea.key && myGameArea.key == 40) {this.character.speedY = 5; this.character.speedX = 0; this.character.angle = Math.PI/2;}
+        if (this.character.speedX != 0 || this.character.speedY != 0) {
+          mySirenSound.play();
+        }
+        if (myGameArea.main_character != "pacman"){
+            this.character.angle = 0;
+        }
+        //crashBorder(character);
+    }
+
+    function crashBorder(character){
+      this.limitX = myGameArea.canvas.width;
+      this.limitY = myGameArea.canvas.height;
+      speedXbefore = this.character.speedX;
+      speedYbefore = this.character.speedY;
+      if (this.character.x > (this.limitX - (this.character.width/2))){
+        this.character.speedX = -speedXbefore; this.character.speedY = 0;
+      } else if (this.character.y > (this.limitY - (this.character.height/2))) {
+        this.character.speedY = -speedYbefore; this.character.speedX = 0;
+      } else if (this.character.x < (this.character.width/2)) {
+        this.character.speedX = -speedXbefore; this.character.speedY = 0;
+        } else if (this.character.y < (this.character.height/2)) {
+        this.character.speedY = -speedYbefore; this.character.speedX = 0;
+      }
+    }
+
+    function updateGameArea() {
+
+
+        if (myPacman.crashWith(myBlueGhost) || myPacman.crashWith(myOrangeGhost) || myPacman.crashWith(myRedGhost)) {
+            // myLives -= 1;
+            // No resto vidas!
+            if (myPacman.crashWith(myBlueGhost)){
+              crashed_ghost = myBlueGhost;
+            }else if (myPacman.crashWith(myOrangeGhost)) {
+              crashed_ghost = myOrangeGhost;
+            }else {
+              crashed_ghost = myRedGhost;
+            }
+            //clearInterval(gameInterval);
+            update_parrafo("Has chocado con un fantasma!");
+            lightRestartGame(myLives, myScore, myDots, crashed_ghost);
+
+        }
+
+        if ((myLives == 0) || (gameSeconds == 0)){
+            if (gameSeconds == 0) {
+              update_parrafo("Se ha acabado el tiempo... Has perdido!");
+            } else {
+              update_parrafo("Te has quedado sin vidas... Has perdido!");
+            }
+
+            myBackgroundMusic.stop();
+            if (myScore > highestScore){
+                highestScore = myScore;
+                if (typeof(Storage) !== "undefined") {
+                      // Code for localStorage/sessionStorage.
+                      localStorage.setItem("hiScore", myScore);
+                  }
+            }
+            document.getElementById("sound-stop").style.display='none';
+            myGameArea.stop();
+            myGameArea.clear();
+
+            document.getElementById("myCanvas").style.display='none';
+            document.getElementById("sound-start").style.display='none';
+            document.getElementById("restart").style.display='block';
+
+
+          } else if (eatenDots == maxDots){
+              if (myScore > highestScore){
+                  highestScore = myScore;
+                  if (typeof(Storage) !== "undefined") {
+                        // Code for localStorage/sessionStorage.
+                        localStorage.setItem("hiScore", myScore);
+                    }
+              }
+              myBackgroundMusic.stop();
+              document.getElementById("sound-stop").style.display='none';
+              myGameArea.stop();
+              myGameArea.clear();
+              console.log(gameSeconds);
+              document.getElementById("myCanvas").style.display='none';
+
+              document.getElementById("sound-start").style.display='none';
+              document.getElementById("restart").style.display='block';
+
+            } else {
+
+            myGameArea.clear();
+
+            ctx = myGameArea.context;
+            ctx.drawImage(myChar1_img, 710, 200, 60, 60);
+            lastspeedX = myPacman.speedX;
+            lastspeedY = myPacman.speedY;
+
+            lastspeed_redx = myRedGhost.speedX;
+            lastspeed_redy = myRedGhost.speedY;
+
+            lastspeed_bluex = myBlueGhost.speedX;
+            lastspeed_bluey = myBlueGhost.speedY;
+
+            lastspeed_orangex = myOrangeGhost.speedX;
+            lastspeed_orangey = myOrangeGhost.speedY;
+
+            stopCharacter(myPacman);
+            controlCharacter(myPacman);
+
+            for (i = 0; i < myObstacles.length; i += 1) {
+              if (myPacman.crashWith(myObstacles[i])) {
+                  console.log("Changing: ", lastspeedX, lastspeedY)
+                  myPacman.speedX = -lastspeedX;
+                  myPacman.speedY = -lastspeedY;
+                  console.log("crashing with object:");
+                  console.log(myObstacles[i].x, myObstacles[i].y);
+              }
+              if (myRedGhost.crashWith(myObstacles[i])){
+                  myRedGhost.speedX = -lastspeed_redx;
+                  myRedGhost.speedY = -lastspeed_redy;
+              }
+              if (myBlueGhost.crashWith(myObstacles[i])){
+                  myBlueGhost.speedX = -lastspeed_bluex;
+                  myBlueGhost.speedY = -lastspeed_bluey;
+              }
+              if (myOrangeGhost.crashWith(myObstacles[i])){
+                  myOrangeGhost.speedX = -lastspeed_orangex;
+                  myOrangeGhost.speedY = -lastspeed_orangey;
+              }
+
+            }
+
+            myPacman.newPos();
+
+            for (i = 0; i < myDots.length; i += 1) {
+              if (myPacman.crashWith(myDots[i])) {
+                if (myDots[i].width != 0){
+                  myWakaSound.play();
+                  if (myDots[i].width == 30){
+                    update_parrafo("Te has comido un punto gordo!");
+                    myScore += 20;
+                    eatenDots += 1;
+                  }else{
+                    myScore += 10;
+                    eatenDots += 1;
+                  }
+                  myDots[i].width = 0;
+                  myDots[i].height = 0;
+              }
+            }
+            }
+
+
+            moveCharacter(myBlueGhost, 'horizontal');
+            myBlueGhost.newPos();
+
+            moveCharacter(myOrangeGhost, 'vertical');
+            myOrangeGhost.newPos();
+
+            moveCharacter(myRedGhost, 'horizontal');
+            myRedGhost.newPos();
+
+            for (i = 0; i < myDots.length; i += 1) {
+              myDots[i].update();
+            }
+
+            for (i = 0; i < myObstacles.length; i += 1) {
+              myObstacles[i].update();
+            }
+
+            myScoreText.text="SCORE: " + String(myScore);
+            myLivesText.text="Lives: " + String(myLives);
+            myTimeText.text="Time: " + String(gameSeconds);
+
+            for (i = 0; i < myTexts.length; i += 1) {
+              myTexts[i].update();
+            }
+
+            myPacman.update();
+            myBlueGhost.update();
+            myOrangeGhost.update();
+            myRedGhost.update();
+
+
+        }
+    }
+
+    function update_parrafo(parrafo_info){
+      my_info = document.getElementById("info");
+      if (my_info == null){
+        // Es la primera vez que se crea el parrafo
+        console.log("primera vez que se crea el parrafo")
+        nuevo_nodo = document.createElement("p");
+        nuevo_nodo.id = "info";
+        console.log(nuevo_nodo);
+        document.body.appendChild(nuevo_nodo);
+      } else {
+        my_info.innerHTML = '<p>' + parrafo_info + '</p>'
+      }
+    }
+
+    function stopCharacter(character){
+      this.character = character;
+      this.character.speedX = 0;
+      this.character.speedY = 0;
+    }
+
+    function moveCharacter(character, mode){
+      this.character = character;
+      crashBorder(character);
+      /*FIXME: Poner velocidad del personaje como parámetro*/
+      /*TODO*/
+    }
+    function hideStartButton(){
+      document.getElementById("sound-start").style.display='none';
+    }
+
+
+    </script>
+  </div>
+    <center>
+      <button class="button" id="start" onclick="startGame([]);">Start Game</button>
+      <button class="button" id="restart" onclick="restartGame();">Restart Game</button>
+      <button class="button" id="sound-start" onclick="myBackgroundMusic.stop(); myBackgroundMusic.play(); hideStartButton;">Start Music</button>
+      <button class="button" id="sound-stop" onclick="myBackgroundMusic.stop();">Stop Music</button>
+    </center>
+  </div>
+</center>
+</body>
+</html>
